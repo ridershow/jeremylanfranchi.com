@@ -1,0 +1,52 @@
+{
+  "name": "Jérémy Lanfranchi",
+  "shortName": "Jérémy",
+  "kicker": "Hi there",
+  "bio": "I lead field marketing at GitGuardian & shoot pictures, sometimes.",
+  "intro": [
+    "Invent, design, prototype, industrialize.",
+    "Originally shaped as industrial and mechanical designer applying it for 2 years in the car manufacturing industry, I rapidly took my way off into the urban sport industry. From there I started building for a freestyle scooter brand and a media company. Working from 3D design to manufacturing at large scale to building brand identity through photography alongside team & travel management. These experiences have enlightened my love for marketing which got me into Growth Marketing. It enables me to pursue this willingness to constantly invent, design, prototype, industrialize. But in the tech world now!"
+  ],
+  "tagline": "Growth marketer, Photographer, traveler. Join me on my journey.",
+  "location": "Paris, France",
+  "portrait": "/brand/profile-image.webp",
+  "email": "contact@jeremylanfranchi.com",
+  "resumeHref": "/Resume-Jeremy-Lanfranchi.pdf",
+  "portfolioHref": "https://portfolio.jeremylanfranchi.com",
+  "skills": {
+    "core": [
+      "Search & Social Ads",
+      "Product Led Growth (PLG)",
+      "Inbound Marketing",
+      "Outbound Marketing",
+      "Marketing Automation",
+      "Agentic Engineering",
+      "SEO",
+      "ABM",
+      "Google Spreadsheet",
+      "Google Analytics",
+      "Webflow",
+      "Github",
+      "Figma",
+      "Adobe Lightroom",
+      "Adobe Photoshop"
+    ],
+    "other": [
+      "Copywriting",
+      "Creativity",
+      "Field Marketing",
+      "Snowflake",
+      "customer.io",
+      "n8n",
+      "Web & Mobile app",
+      "Web Scraping",
+      "Shopify"
+    ]
+  },
+  "socials": [
+    { "label": "LinkedIn", "href": "https://www.linkedin.com/in/jeremylanfranchi" },
+    { "label": "Instagram", "href": "https://instagram.com/ridershow" },
+    { "label": "GitHub", "href": "https://github.com/ridershow" },
+    { "label": "X", "href": "https://twitter.com/jeditch" }
+  ]
+}

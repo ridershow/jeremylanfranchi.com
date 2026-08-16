@@ -1,26 +1,130 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --coral: #e85d4c;
+  --void: #07080c;
+  --background: #07080c;
+  --foreground: #f6f4f0;
+  --split-type: 38.2%;
+  --measure: 65ch;
+  --track-education: 8px;
+  --track-founder: 16px;
+  --track-fte: 26px;
+  --track-sublane: 5px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --track-education: 6px;
+    --track-founder: 16px;
+    --track-fte: 44px;
+    --track-sublane: 9px;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-outfit), "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-syne), "Syne", ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html,
+body {
+  height: 100%;
+  background: var(--void);
+  color: var(--foreground);
+  overscroll-behavior: none;
+}
+
+.font-display {
+  font-family: var(--font-syne), "Syne", ui-sans-serif, system-ui, sans-serif;
+}
+
+.chapter-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.maplibregl-ctrl-attrib {
+  background: rgba(7, 8, 12, 0.55) !important;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 10px;
+  margin: 0 12px var(--map-chrome-bottom, 96px) 0 !important;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.maplibregl-ctrl-logo {
+  margin: 0 0 var(--map-chrome-bottom, 96px) 12px !important;
+}
+
+@media (max-width: 767px) {
+  .maplibregl-ctrl-attrib {
+    margin: 0 8px var(--map-chrome-bottom, 8px) 0 !important;
+  }
+
+  .maplibregl-ctrl-logo {
+    margin: 0 0 var(--map-chrome-bottom, 8px) 8px !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.journey-pin {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.journey-pin::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 999px;
+  background: #f4f0ea;
+  box-shadow: 0 0 0 2px rgba(7, 8, 12, 0.45);
+}
+
+.journey-pin[data-visited="true"]::before {
+  background: #f3b4ab;
+}
+
+.journey-pin[data-active="true"]::before {
+  inset: 3px;
+  background: var(--coral);
+  box-shadow:
+    0 0 0 2px rgba(7, 8, 12, 0.35),
+    0 0 16px rgba(232, 93, 76, 0.85);
+}
+
+.journey-pin[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid var(--coral);
+  animation: journey-pin-pulse 1.8s ease-out infinite;
+}
+
+@keyframes journey-pin-pulse {
+  from {
+    transform: scale(0.72);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

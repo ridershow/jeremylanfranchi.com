@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jérémy Lanfranchi
 
-## Getting Started
+Personal site: an interactive globe through the places that shaped me.
 
-First, run the development server:
+Production: [jeremylanfranchi.com](https://jeremylanfranchi.com)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Architecture
+
+Hostinger keeps the domain registration and email. Cloudflare is DNS, proxy, and CDN. Firebase Hosting serves the static export.
+
+```
+Hostinger (registrar + email)
+        │
+        ▼
+Cloudflare (DNS + proxy + CDN)
+        ▲
+        │
+Firebase Hosting (jlperso-eac6c)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+MX, SPF, and other mail records stay on Hostinger through Cloudflare DNS. They are not proxied.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000). The first screen is a short intro; **Get started** opens the globe.
 
-To learn more about Next.js, take a look at the following resources:
+## Add stories and photos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See [CONTENT.md](CONTENT.md). Chapters are markdown. Photographs go in `public/photos/<slug>/`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy
 
-## Deploy on Vercel
+The site is a Next.js static export (`out/`) deployed to the existing Firebase Hosting site. DNS does not change.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npx firebase login
+npm run deploy
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`www.jeremylanfranchi.com` should 301 to the apex. If it still 404s, add `www` in Firebase Hosting as a redirect to `jeremylanfranchi.com`, or a Cloudflare Redirect Rule with the same target.
