@@ -262,23 +262,18 @@ export function Experience({ chapters, profile }: ExperienceProps) {
             }`}
           >
             <div ref={overheadRef} className="shrink-0">
-              <motion.p
-                key={started ? "tagline" : "orbit-kicker"}
-                initial={reducedMotion ? false : { y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className={`text-[11px] tracking-[0.22em] text-white/55 uppercase ${
-                  textFirst ? "max-md:hidden" : ""
-                }`}
-              >
-                {started ? (
-                  profile.tagline
-                ) : (
-                  <>
-                    <span className="md:hidden">{profile.tagline}</span>
-                    <span className="hidden md:inline">{profile.kicker}</span>
-                  </>
-                )}
-              </motion.p>
+              {!playing ? (
+                <motion.p
+                  key={started ? `${chapter.slug}-kicker` : "orbit-kicker"}
+                  initial={reducedMotion ? false : { y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  className="text-[11px] tracking-[0.22em] text-white/55 uppercase"
+                >
+                  {started
+                    ? chapter.kicker || chapter.location.name
+                    : profile.kicker}
+                </motion.p>
+              ) : null}
 
               {relocating ? (
                 <div className="mt-2 md:mt-5">

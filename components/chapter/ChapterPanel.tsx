@@ -54,7 +54,7 @@ export function ChapterPanel({
     chapter.dateLabel,
     chapter.ongoing,
   );
-  const meta = [chapter.kicker, range, chapter.location.name].filter(Boolean);
+  const meta = [range, chapter.location.name].filter(Boolean);
   const tenure = tenureFor(chapters, activeIndex);
 
   const controls = (
