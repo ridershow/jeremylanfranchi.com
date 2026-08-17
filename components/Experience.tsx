@@ -12,10 +12,12 @@ import {
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
-import { ChapterPanel, ReadToggle } from "@/components/chapter/ChapterPanel";
+import { ChapterPanel } from "@/components/chapter/ChapterPanel";
+import { ReadToggle } from "@/components/chapter/ReadToggle";
 import { Wordmark } from "@/components/chrome/Wordmark";
 import { Timeline } from "@/components/timeline/Timeline";
 import { useJourney } from "@/hooks/useJourney";
+import { useReadingMode } from "@/hooks/useReadingMode";
 import { useContentLayout } from "@/hooks/useContentLayout";
 import { useViewport } from "@/hooks/useMedia";
 import {
@@ -61,13 +63,16 @@ function IntroPanelBody({
           ) : null}
           <ReadToggle expanded={false} onClick={onToggleReading} />
         </div>
-      ) : null}
+      ) : (
+        <div className="shrink-0 px-4 pt-3 md:hidden">
+          <ReadToggle expanded onClick={onToggleReading} />
+        </div>
+      )}
       <div
         className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 text-sm leading-[1.7] text-white/82 md:px-5 md:py-5 md:text-base md:leading-[1.65] md:text-white/78 ${
           reading ? "flex-1" : "hidden flex-1 md:block"
         }`}
       >
-        {reading ? <ReadToggle expanded onClick={onToggleReading} /> : null}
         {profile.intro.map((paragraph, introIndex) => (
           <p
             key={paragraph.slice(0, 24)}
@@ -124,11 +129,9 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const overheadRef = useRef<HTMLDivElement>(null);
   const [mapPadding, setMapPadding] = useState<MapPadding | null>(null);
-  const [reading, setReading] = useState(false);
 
   const chapter = chapters[index];
   const collapsed = playing;
-  const textFirst = phone && reading && !playing;
   const layoutMode = useContentLayout({
     enabled: !phone && !collapsed,
     contentKey: `${started ? chapter.slug : "orbit"}-${index}`,
@@ -140,26 +143,15 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   });
   const sidePanel = layoutMode === "side";
   const compactTitle = layoutMode === "compact";
-
-  const toggleReading = useCallback(() => {
-    setReading((open) => {
-      if (!open) setPlaying(false);
-      return !open;
-    });
+  const pausePlayback = useCallback(() => {
+    setPlaying(false);
   }, [setPlaying]);
-
-  useEffect(() => {
-    if (playing || !phone) setReading(false);
-  }, [playing, phone]);
-
-  useEffect(() => {
-    if (!reading) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setReading(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [reading]);
+  const { reading, toggleReading } = useReadingMode({
+    phone,
+    playing,
+    onOpen: pausePlayback,
+  });
+  const textFirst = phone && reading && !playing;
 
   useEffect(() => {
     panelRef.current?.scrollTo({ top: 0 });

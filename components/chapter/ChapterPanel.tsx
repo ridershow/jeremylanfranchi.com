@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import type { RefObject } from "react";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
+import { ReadToggle } from "@/components/chapter/ReadToggle";
 import { formatRange } from "@/lib/dates";
 import { tenureDuration, tenureFor, type TenureGroup } from "@/lib/tenure";
 import { trackTheme } from "@/lib/tracks";
@@ -162,13 +163,17 @@ export function ChapterPanel({
           ) : null}
 
           {reading ? (
-            <div
-              key={chapter.slug}
-              className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:hidden"
-            >
-              <ReadToggle expanded onClick={onToggleReading} />
-              {renderStory()}
-            </div>
+            <>
+              <div className="shrink-0 px-4 pt-3 md:hidden">
+                <ReadToggle expanded onClick={onToggleReading} />
+              </div>
+              <div
+                key={chapter.slug}
+                className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:hidden"
+              >
+                {renderStory()}
+              </div>
+            </>
           ) : null}
 
           {!collapsed ? (
@@ -185,30 +190,6 @@ export function ChapterPanel({
         </div>
       </div>
     </div>
-  );
-}
-
-export function ReadToggle({
-  expanded,
-  onClick,
-}: {
-  expanded: boolean;
-  onClick?: () => void;
-}) {
-  if (!onClick) return null;
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-expanded={expanded}
-      className={`inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)] ${
-        expanded ? "mb-4" : "mt-3"
-      }`}
-    >
-      {expanded ? "Fermer" : "Lire plus"}
-      <span aria-hidden="true">{expanded ? "×" : "→"}</span>
-    </button>
   );
 }
 
