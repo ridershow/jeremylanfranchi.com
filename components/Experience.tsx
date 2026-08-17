@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
-import { ChapterPanel } from "@/components/chapter/ChapterPanel";
+import { ChapterPanel, ReadToggle } from "@/components/chapter/ChapterPanel";
 import { Wordmark } from "@/components/chrome/Wordmark";
 import { Timeline } from "@/components/timeline/Timeline";
 import { useJourney } from "@/hooks/useJourney";
@@ -36,34 +36,64 @@ type ExperienceProps = {
   profile: Profile;
 };
 
-function IntroPanelBody({ profile }: { profile: Profile }) {
+function IntroPanelBody({
+  profile,
+  reading = false,
+  onToggleReading,
+}: {
+  profile: Profile;
+  reading?: boolean;
+  onToggleReading?: () => void;
+}) {
+  const [motto, ...rest] = profile.intro;
+
   return (
-    <div className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 text-sm leading-[1.65] text-white/78 md:px-5 md:py-5 md:text-base">
-      {profile.intro.map((paragraph, introIndex) => (
-        <p
-          key={paragraph.slice(0, 24)}
-          className={introIndex === 0 ? "text-[var(--coral)]" : "mt-4"}
-        >
-          {paragraph}
+    <>
+      {!reading ? (
+        <div className="px-4 py-3 md:hidden">
+          {motto ? (
+            <p className="text-sm leading-[1.65] text-[var(--coral)]">{motto}</p>
+          ) : null}
+          {rest[0] ? (
+            <p className="mt-2 line-clamp-3 text-sm leading-[1.65] text-white/78">
+              {rest[0]}
+            </p>
+          ) : null}
+          <ReadToggle expanded={false} onClick={onToggleReading} />
+        </div>
+      ) : null}
+      <div
+        className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 text-sm leading-[1.7] text-white/82 md:px-5 md:py-5 md:text-base md:leading-[1.65] md:text-white/78 ${
+          reading ? "flex-1" : "hidden flex-1 md:block"
+        }`}
+      >
+        {reading ? <ReadToggle expanded onClick={onToggleReading} /> : null}
+        {profile.intro.map((paragraph, introIndex) => (
+          <p
+            key={paragraph.slice(0, 24)}
+            className={introIndex === 0 ? "text-[var(--coral)]" : "mt-4"}
+          >
+            {paragraph}
+          </p>
+        ))}
+        <p className="mt-4 hidden text-white/60 md:block">
+          Drag the globe, tap a pin, or step through chapters with A and D or
+          keyboard arrows.
         </p>
-      ))}
-      <p className="mt-4 hidden text-white/60 md:block">
-        Drag the globe, tap a pin, or step through chapters with A and D or
-        keyboard arrows.
-      </p>
-      <p className="mt-4 text-white/60 md:hidden">
-        Drag the globe, tap a pin, or step with the controls.
-      </p>
-      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-        <Link
-          href="/skills"
-          className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
-        >
-          See skills
-          <span aria-hidden="true">→</span>
-        </Link>
+        <p className="mt-4 text-white/60 md:hidden">
+          Drag the globe, tap a pin, or step with the controls.
+        </p>
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <Link
+            href="/skills"
+            className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
+          >
+            See skills
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -76,6 +106,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     index,
     playing,
     started,
+    setPlaying,
     togglePlay,
     goTo,
     next,
@@ -84,7 +115,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     goEnd,
     reducedMotion,
   } = useJourney(chapters.length, goContact);
-  const { phone, short } = useViewport();
+  const { phone } = useViewport();
   const frameRef = useRef<HTMLDivElement>(null);
   const wellRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -93,9 +124,11 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const overheadRef = useRef<HTMLDivElement>(null);
   const [mapPadding, setMapPadding] = useState<MapPadding | null>(null);
+  const [reading, setReading] = useState(false);
 
   const chapter = chapters[index];
-  const collapsed = playing || (phone && short);
+  const collapsed = playing;
+  const textFirst = phone && reading && !playing;
   const layoutMode = useContentLayout({
     enabled: !phone && !collapsed,
     contentKey: `${started ? chapter.slug : "orbit"}-${index}`,
@@ -108,10 +141,34 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const sidePanel = layoutMode === "side";
   const compactTitle = layoutMode === "compact";
 
+  const toggleReading = useCallback(() => {
+    setReading((open) => {
+      if (!open) setPlaying(false);
+      return !open;
+    });
+  }, [setPlaying]);
+
+  useEffect(() => {
+    if (playing || !phone) setReading(false);
+  }, [playing, phone]);
+
+  useEffect(() => {
+    if (!reading) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setReading(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [reading]);
+
+  useEffect(() => {
+    panelRef.current?.scrollTo({ top: 0 });
+  }, [index, reading]);
+
   useEffect(() => {
     const frame = frameRef.current;
     const well = wellRef.current;
-    if (!frame || !well || !phone) {
+    if (!frame || !well || !phone || textFirst) {
       setMapPadding(null);
       return;
     }
@@ -128,7 +185,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     observer.observe(frame);
     observer.observe(well);
     return () => observer.disconnect();
-  }, [phone, collapsed, started]);
+  }, [phone, collapsed, started, textFirst]);
 
   if (!chapter) return null;
 
@@ -163,7 +220,13 @@ export function Experience({ chapters, profile }: ExperienceProps) {
       </div>
 
       <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(7,8,12,0.92)_0%,rgba(7,8,12,0.78)_28%,rgba(7,8,12,0.42)_38.2%,rgba(7,8,12,0.12)_52%,transparent_68%)] md:block" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,8,12,0.55)_0%,rgba(7,8,12,0.12)_18%,transparent_32%,rgba(7,8,12,0.35)_58%,rgba(7,8,12,0.92)_78%,rgba(7,8,12,0.97)_100%)] md:hidden" />
+      <div
+        className={`pointer-events-none absolute inset-0 md:hidden ${
+          textFirst
+            ? "bg-[linear-gradient(180deg,rgba(7,8,12,0.42)_0%,rgba(7,8,12,0.18)_22%,rgba(7,8,12,0.28)_48%,rgba(7,8,12,0.62)_100%)]"
+            : "bg-[linear-gradient(180deg,rgba(7,8,12,0.55)_0%,rgba(7,8,12,0.12)_18%,transparent_32%,rgba(7,8,12,0.35)_58%,rgba(7,8,12,0.92)_78%,rgba(7,8,12,0.97)_100%)]"
+        }`}
+      />
 
       <div className="pointer-events-none relative z-10 flex h-full flex-col">
         <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-2 md:p-6 lg:px-10">
@@ -173,20 +236,22 @@ export function Experience({ chapters, profile }: ExperienceProps) {
         <div
           ref={wellRef}
           className={
-            collapsed
-              ? "min-h-[160px] flex-1 md:hidden"
-              : "h-[min(38dvh,220px)] shrink-0 md:hidden"
+            textFirst
+              ? "h-0 shrink-0 overflow-hidden md:hidden"
+              : "min-h-[160px] flex-1 md:hidden"
           }
         />
 
         <div
           ref={contentRef}
           className={`flex min-h-0 overflow-hidden px-4 md:px-8 lg:px-10 ${
-            collapsed
-              ? "shrink-0 max-md:max-h-[46%] flex-col"
-              : sidePanel
-                ? "min-h-0 flex-1 flex-col md:flex-row md:items-start md:justify-between md:gap-8"
-                : "min-h-0 flex-1 flex-col"
+            textFirst
+              ? "min-h-0 flex-1 flex-col"
+              : collapsed
+                ? "shrink-0 max-md:max-h-[46%] flex-col md:min-h-0 md:flex-1"
+                : sidePanel
+                  ? "shrink-0 flex-col md:min-h-0 md:flex-1 md:flex-row md:items-start md:justify-between md:gap-8"
+                  : "shrink-0 flex-col md:min-h-0 md:flex-1"
           }`}
         >
           <div
@@ -201,9 +266,18 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 key={started ? "tagline" : "orbit-kicker"}
                 initial={reducedMotion ? false : { y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="text-[11px] tracking-[0.22em] text-white/55 uppercase"
+                className={`text-[11px] tracking-[0.22em] text-white/55 uppercase ${
+                  textFirst ? "max-md:hidden" : ""
+                }`}
               >
-                {started ? profile.tagline : profile.kicker}
+                {started ? (
+                  profile.tagline
+                ) : (
+                  <>
+                    <span className="md:hidden">{profile.tagline}</span>
+                    <span className="hidden md:inline">{profile.kicker}</span>
+                  </>
+                )}
               </motion.p>
 
               {relocating ? (
@@ -258,6 +332,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 reducedMotion={reducedMotion}
                 collapsed={collapsed}
                 playing={playing}
+                reading={reading}
                 layoutMode={layoutMode}
                 panelRef={panelRef}
                 onGoTo={goTo}
@@ -266,6 +341,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 onTogglePlay={togglePlay}
                 onStart={goStart}
                 onEnd={goEnd}
+                onToggleReading={toggleReading}
               />
             ) : !started ? (
               collapsed ? (
@@ -286,9 +362,17 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               ) : !sidePanel ? (
                 <div
                   ref={panelRef}
-                  className="pointer-events-auto mt-3 flex min-h-0 flex-1 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82 md:mt-5"
+                  className={`pointer-events-auto mt-3 flex min-h-0 flex-col overflow-hidden border border-white/10 md:mt-5 ${
+                    textFirst
+                      ? "flex-1 bg-[#07080c]/58"
+                      : "bg-[#07080c]/72 md:flex-1 md:bg-[#07080c]/82"
+                  }`}
                 >
-                  <IntroPanelBody profile={profile} />
+                  <IntroPanelBody
+                    profile={profile}
+                    reading={reading}
+                    onToggleReading={toggleReading}
+                  />
                   <ChapterControls
                     attached
                     playing={playing}
@@ -315,6 +399,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 reducedMotion={reducedMotion}
                 collapsed={collapsed}
                 playing={playing}
+                reading={reading}
                 layoutMode={layoutMode}
                 panelRef={panelRef}
                 onGoTo={goTo}
@@ -323,6 +408,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 onTogglePlay={togglePlay}
                 onStart={goStart}
                 onEnd={goEnd}
+                onToggleReading={toggleReading}
               />
             </div>
           ) : sidePanel && !started && !collapsed ? (
