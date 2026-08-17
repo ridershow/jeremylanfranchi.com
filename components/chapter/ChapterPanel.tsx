@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import type { RefObject } from "react";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
 import { formatRange } from "@/lib/dates";
@@ -17,6 +17,7 @@ type ChapterPanelProps = {
   reducedMotion: boolean;
   collapsed: boolean;
   playing: boolean;
+  reading?: boolean;
   layoutMode?: ContentLayoutMode;
   panelRef?: RefObject<HTMLDivElement | null>;
   onGoTo: (index: number) => void;
@@ -25,6 +26,7 @@ type ChapterPanelProps = {
   onTogglePlay: () => void;
   onStart: () => void;
   onEnd: () => void;
+  onToggleReading?: () => void;
 };
 
 export function ChapterPanel({
@@ -34,6 +36,7 @@ export function ChapterPanel({
   reducedMotion,
   collapsed,
   playing,
+  reading = false,
   layoutMode = "default",
   panelRef,
   onGoTo,
@@ -42,6 +45,7 @@ export function ChapterPanel({
   onTogglePlay,
   onStart,
   onEnd,
+  onToggleReading,
 }: ChapterPanelProps) {
   const paragraphs = chapter.body.split(/\n\n+/).filter(Boolean);
   const range = formatRange(
@@ -50,7 +54,7 @@ export function ChapterPanel({
     chapter.dateLabel,
     chapter.ongoing,
   );
-  const meta = [chapter.kicker, range, chapter.location.name].filter(Boolean);
+  const meta = [range, chapter.location.name].filter(Boolean);
   const tenure = tenureFor(chapters, activeIndex);
 
   const controls = (
@@ -70,94 +74,141 @@ export function ChapterPanel({
 
   const side = layoutMode === "side";
 
+  const renderStory = () => (
+    <>
+      {tenure ? (
+        <TenureTrack
+          tenure={tenure}
+          activeIndex={activeIndex}
+          onGoTo={onGoTo}
+        />
+      ) : null}
+
+      <div className="max-w-[65ch] space-y-4 text-sm leading-[1.7] text-white/82 md:text-base md:leading-[1.65] md:text-white/78">
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+        ))}
+      </div>
+
+      <ChapterPhotos
+        photos={chapter.photos}
+        chapterTitle={chapter.title}
+        reducedMotion={reducedMotion}
+      />
+      <ChapterMoments
+        moments={chapter.moments}
+        reducedMotion={reducedMotion}
+      />
+
+      {activeIndex === chapters.length - 1 ? (
+        <div className="mt-7 border-t border-white/10 pt-5">
+          <p className="text-[11px] tracking-[0.2em] text-[var(--coral)] uppercase">
+            End of the road
+          </p>
+          <p className="mt-2 text-base leading-[1.65] text-white/78">
+            That&apos;s the story so far. If you want to work together,
+            talk pictures, or just say hi —
+          </p>
+          <Link
+            href="/contact"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
+          >
+            Say hello
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      ) : null}
+    </>
+  );
+
   return (
     <div
       className={`pointer-events-auto flex min-h-0 flex-col ${
-        side ? "flex-1" : "mt-3 flex-1 md:mt-5"
+        side
+          ? "flex-1"
+          : reading
+            ? "mt-3 flex-1 md:mt-5"
+            : "mt-3 md:mt-5 md:flex-1"
       }`}
     >
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <AnimatePresence mode="wait">
-          {!collapsed ? (
-            <motion.p
-              key={`${chapter.slug}-meta`}
-              initial={reducedMotion ? false : { y: 16, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={reducedMotion ? { opacity: 0 } : { y: 10, opacity: 0 }}
-              transition={
-                reducedMotion
-                  ? { duration: 0.15 }
-                  : { type: "spring", stiffness: 280, damping: 30 }
-              }
-              className={`shrink-0 text-[11px] tracking-[0.18em] text-white/50 uppercase max-md:line-clamp-2 ${side ? "md:text-right" : ""}`}
-            >
-              {meta.join(" · ")}
-            </motion.p>
-          ) : null}
-        </AnimatePresence>
+        {!collapsed ? (
+          <p
+            className={`shrink-0 text-[11px] tracking-[0.18em] text-white/50 uppercase ${
+              reading
+                ? "line-clamp-2 md:hidden"
+                : `hidden md:block ${side ? "md:text-right" : ""}`
+            }`}
+          >
+            {meta.join(" · ")}
+          </p>
+        ) : null}
 
         <div
           ref={panelRef}
-          className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82 md:mt-4"
+          className={`mt-3 flex min-h-0 flex-col overflow-hidden border border-white/10 md:mt-4 ${
+            reading
+              ? "flex-1 bg-[#07080c]/58 md:bg-[#07080c]/82"
+              : "bg-[#07080c]/72 md:flex-1 md:bg-[#07080c]/82"
+          }`}
         >
-          <AnimatePresence mode="wait">
-            {!collapsed ? (
-              <motion.div
-                key={chapter.slug}
-                initial={reducedMotion ? false : { y: 12, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={reducedMotion ? { opacity: 0 } : { y: 8, opacity: 0 }}
-                className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:px-5 md:py-5"
-              >
-                {tenure ? (
-                  <TenureTrack
-                    tenure={tenure}
-                    activeIndex={activeIndex}
-                    onGoTo={onGoTo}
-                  />
-                ) : null}
+          {!collapsed && !reading ? (
+            <div className="px-4 py-3 md:hidden">
+              <p className="line-clamp-3 text-sm leading-[1.65] text-white/78">
+                {paragraphs[0]}
+              </p>
+              <ReadToggle expanded={false} onClick={onToggleReading} />
+            </div>
+          ) : null}
 
-                <div className="max-w-[65ch] space-y-4 text-sm leading-[1.65] text-white/78 md:text-base">
-                  {paragraphs.map((paragraph) => (
-                    <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                  ))}
-                </div>
+          {reading ? (
+            <div
+              key={chapter.slug}
+              className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:hidden"
+            >
+              <ReadToggle expanded onClick={onToggleReading} />
+              {renderStory()}
+            </div>
+          ) : null}
 
-                <ChapterPhotos
-                  photos={chapter.photos}
-                  chapterTitle={chapter.title}
-                  reducedMotion={reducedMotion}
-                />
-                <ChapterMoments
-                  moments={chapter.moments}
-                  reducedMotion={reducedMotion}
-                />
-
-                {activeIndex === chapters.length - 1 ? (
-                  <div className="mt-7 border-t border-white/10 pt-5">
-                    <p className="text-[11px] tracking-[0.2em] text-[var(--coral)] uppercase">
-                      End of the road
-                    </p>
-                    <p className="mt-2 text-base leading-[1.65] text-white/78">
-                      That&apos;s the story so far. If you want to work together,
-                      talk pictures, or just say hi —
-                    </p>
-                    <Link
-                      href="/contact"
-                      className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
-                    >
-                      Say hello
-                      <span aria-hidden="true">→</span>
-                    </Link>
-                  </div>
-                ) : null}
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+          {!collapsed ? (
+            <motion.div
+              key={chapter.slug}
+              initial={reducedMotion ? false : { y: 12, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="chapter-panel hidden min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
+            >
+              {renderStory()}
+            </motion.div>
+          ) : null}
           {controls}
         </div>
       </div>
     </div>
+  );
+}
+
+export function ReadToggle({
+  expanded,
+  onClick,
+}: {
+  expanded: boolean;
+  onClick?: () => void;
+}) {
+  if (!onClick) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-expanded={expanded}
+      className={`inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)] ${
+        expanded ? "mb-4" : "mt-3"
+      }`}
+    >
+      {expanded ? "Fermer" : "Lire plus"}
+      <span aria-hidden="true">{expanded ? "×" : "→"}</span>
+    </button>
   );
 }
 

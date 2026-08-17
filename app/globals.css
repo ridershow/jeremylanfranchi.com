@@ -63,12 +63,9 @@ body {
 }
 
 @media (max-width: 767px) {
-  .maplibregl-ctrl-attrib {
-    margin: 0 8px var(--map-chrome-bottom, 8px) 0 !important;
-  }
-
+  .maplibregl-ctrl-attrib,
   .maplibregl-ctrl-logo {
-    margin: 0 0 var(--map-chrome-bottom, 8px) 8px !important;
+    display: none !important;
   }
 }
 
