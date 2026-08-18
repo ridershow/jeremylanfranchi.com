@@ -181,7 +181,7 @@ export function ChapterPanel({
               key={chapter.slug}
               initial={reducedMotion ? false : { y: 12, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="chapter-panel hidden min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
+              className="chapter-panel journey-story-min hidden min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
             >
               {renderStory()}
             </motion.div>

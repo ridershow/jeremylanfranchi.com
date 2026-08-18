@@ -10,7 +10,8 @@ import {
 
 export type ContentLayoutMode = "default" | "compact" | "side";
 
-const MIN_PANEL_HEIGHT = 96;
+/** Desktop story pane plus playback chrome. Keep in step with --journey-story-min. */
+const MIN_PANEL_HEIGHT = 260;
 const TITLE_COMPACT_SCALE = 0.68;
 const PANEL_STACK_EXTRA = 120;
 const BELOW_TITLE_GAP = 20;

@@ -74,7 +74,7 @@ function IntroPanelBody({
       <div
         className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 text-sm leading-[1.7] text-white/82 md:px-5 md:py-5 md:text-base md:leading-[1.65] md:text-white/78 ${
           reading ? "flex-1" : "hidden flex-1 md:block"
-        }`}
+        } journey-story-min`}
       >
         {profile.intro.map((paragraph, introIndex) => (
           <p
@@ -305,11 +305,12 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                   ? { duration: 0.2 }
                   : { type: "spring", stiffness: 260, damping: 24 }
               }
-              className={`font-display mt-1 shrink-0 leading-[0.9] font-semibold tracking-tight text-balance md:mt-3 ${
+              title={started ? chapter.title : "Earth"}
+              className={`font-display journey-title mt-1 max-w-full shrink-0 leading-[1] font-semibold tracking-tight text-balance break-words md:mt-3 ${
                 compactTitle
                   ? "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(1.8rem,4vw,3.25rem)]"
                   : "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(2.4rem,5.4vw,4.75rem)]"
-              } ${chapter.company ? "max-w-[16ch]" : "max-w-[12ch]"}`}
+              }`}
             >
               {started ? chapter.title : "Earth"}
             </motion.h1>

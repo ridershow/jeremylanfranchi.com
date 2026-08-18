@@ -8,6 +8,7 @@
   --split-type: 38.2vw;
   --split-read: 61.8vw;
   --measure: 65ch;
+  --journey-story-min: 0px;
   --track-education: 8px;
   --track-founder: 16px;
   --track-fte: 26px;
@@ -20,6 +21,10 @@
     --track-founder: 16px;
     --track-fte: 44px;
     --track-sublane: 9px;
+    /* Floor for the desktop story: ~8 body lines, and a share of the window. */
+    --journey-story-min: 12.5rem;
+    --journey-story-min: max(12.5rem, 26dvh);
+    --journey-story-min: max(12.5rem, 8lh, 26dvh);
   }
 
   /* Title stays on the golden-ratio type column; the story can grow to a reading measure. */
@@ -29,6 +34,10 @@
 
   .journey-read-col {
     max-width: min(48rem, calc(var(--split-read) - 4rem));
+  }
+
+  .journey-story-min {
+    min-height: var(--journey-story-min);
   }
 }
 
@@ -49,6 +58,15 @@ body {
 
 .font-display {
   font-family: var(--font-syne), "Syne", ui-sans-serif, system-ui, sans-serif;
+}
+
+.journey-title {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .chapter-panel {
