@@ -1,10 +1,10 @@
 ---
 slug: o-supply
-title: Founder
+title: Co-founder
 kind: work
 start: "2014-10-01"
 end: "2015-09-01"
-kicker: O Supply Co. · Founder
+kicker: O Supply Co. · Freestyle scooter wheels
 company: O Supply Co.
 track: founder
 location:
@@ -12,12 +12,12 @@ location:
   lat: 48.8765
   lng: 2.1812
 moments:
-  - title: Another company, another brief
+  - title: Wheels with street DNA
     kind: work
     period: 2014 to 2015
-    body: I founded O Supply Co. A company I started because I wanted another canvas, and I was not waiting for permission.
+    body: I co-founded O Supply Co. A freestyle scooter wheel brand. Simple stylish design, the best polyurethane on the market, street DNA to the core.
 ---
 
-I founded O Supply Co. Another company, another brief I wrote for myself.
+I co-founded O Supply Co. A freestyle scooter wheel brand. Simple stylish design, the best polyurethane on the market, street DNA to the core.
 
-I was already in the habit of building. This one started from a blank page in Rueil-Malmaison. Invent first, then make it real.
+I was already in the habit of building. This one started from a blank page in Rueil-Malmaison. Wheels that looked right and rolled better. Invent first, then make it real.
