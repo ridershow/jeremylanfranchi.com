@@ -148,7 +148,7 @@ export function ChapterPanel({
 
         <div
           ref={panelRef}
-          className={`mt-3 flex min-h-0 flex-col overflow-hidden border border-white/10 md:mt-4 ${
+          className={`mt-3 flex min-h-0 flex-col overflow-hidden border border-white/10 md:mt-4 md:w-fit md:max-w-[var(--measure)] md:self-start ${
             reading
               ? "flex-1 bg-[#07080c]/58 md:bg-[#07080c]/82"
               : "bg-[#07080c]/72 md:flex-1 md:bg-[#07080c]/82"
@@ -182,7 +182,7 @@ export function ChapterPanel({
               key={chapter.slug}
               initial={reducedMotion ? false : { y: 12, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="chapter-panel journey-story-min hidden min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
+              className="chapter-panel journey-story-min hidden min-h-0 w-fit max-w-[var(--measure)] flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
             >
               {renderStory()}
             </motion.div>
