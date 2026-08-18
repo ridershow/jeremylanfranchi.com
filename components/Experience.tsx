@@ -135,17 +135,16 @@ export function Experience({ chapters, profile }: ExperienceProps) {
 
   const chapter = chapters[index];
   const collapsed = playing;
-  const layoutMode = useContentLayout({
-    enabled: !phone && !collapsed,
-    contentKey: `${started ? chapter.slug : "orbit"}-${index}`,
+  const titleLayout = useContentLayout({
+    enabled: !phone,
+    titles: ["Earth", ...chapters.map((item) => item.title)],
     titleRef,
-    panelRef,
     timelineRef,
-    contentRef,
     overheadRef,
   });
+  const layoutMode = titleLayout.mode;
   const sidePanel = layoutMode === "side";
-  const compactTitle = layoutMode === "compact";
+  const titleSize = titleLayout.fontSize;
   const pausePlayback = useCallback(() => {
     setPlaying(false);
   }, [setPlaying]);
@@ -306,11 +305,12 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                   : { type: "spring", stiffness: 260, damping: 24 }
               }
               title={started ? chapter.title : "Earth"}
-              className={`font-display journey-title mt-1 max-w-full shrink-0 leading-[1] font-semibold tracking-tight text-balance break-words md:mt-3 ${
-                compactTitle
-                  ? "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(1.8rem,4vw,3.25rem)]"
-                  : "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(2.4rem,5.4vw,4.75rem)]"
-              }`}
+              style={
+                !phone && titleSize
+                  ? { fontSize: `${titleSize}px` }
+                  : undefined
+              }
+              className="font-display journey-title mt-1 shrink-0 text-[clamp(1.7rem,7.2vw,2.35rem)] leading-[1] font-semibold tracking-tight text-balance break-words md:mt-3 md:text-[clamp(1.8rem,4vw,4.75rem)]"
             >
               {started ? chapter.title : "Earth"}
             </motion.h1>

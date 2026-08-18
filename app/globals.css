@@ -32,6 +32,11 @@
     max-width: min(36rem, calc(var(--split-type) - 3.5rem));
   }
 
+  .journey-title {
+    width: 100%;
+    max-width: min(36rem, calc(var(--split-type) - 3.5rem));
+  }
+
   .journey-read-col {
     max-width: min(48rem, calc(var(--split-read) - 4rem));
   }
@@ -61,12 +66,8 @@ body {
 }
 
 .journey-title {
-  display: -webkit-box;
-  overflow: hidden;
+  min-height: 2em;
   overflow-wrap: break-word;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
 }
 
 .chapter-panel {
