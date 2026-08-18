@@ -13,6 +13,7 @@ import {
   flyAnimation,
   flyPadding,
   greatCircle,
+  isCompactViewport,
   isSamePin,
   MAX_ZOOM,
   MIN_ZOOM,
@@ -246,9 +247,13 @@ export default function GlobeCanvas({
 
       if (samePin) return;
 
+      const padding = flyPadding(paddingRef.current);
       const camera = {
-        ...viewForChapter(chapter),
-        padding: flyPadding(paddingRef.current),
+        ...viewForChapter(chapter, {
+          compact: isCompactViewport(),
+          padding,
+        }),
+        padding,
       };
       if (reducedRef.current) {
         map.jumpTo(camera);

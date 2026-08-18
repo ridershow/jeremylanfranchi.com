@@ -9,6 +9,13 @@ export type CameraView = {
   roll: number;
 };
 
+export type MapPadding = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
 /** Obliquity of the ecliptic — Earth's axis leans this many degrees from vertical. */
 export const AXIAL_TILT = 23.44;
 
@@ -26,7 +33,11 @@ export const MAX_ZOOM = 17;
 
 /** Camera target during chapter fly/jump only — not a zoom lock. */
 export const CHAPTER_ZOOM = 5;
+export const PHONE_CHAPTER_ZOOM = 4.4;
 export const CHAPTER_PITCH = 48;
+export const COMPACT_MAX = 768;
+/** Share of the well height to look ahead so the pin sits in the lower third. */
+export const LOOK_AHEAD_WELL_FRACTION = 0.18;
 
 export function angularSeparation(a: GeoPoint, b: GeoPoint): number {
   return Math.hypot(a.lat - b.lat, a.lng - b.lng);
@@ -82,12 +93,67 @@ export function greatCircle(
   return points;
 }
 
-export function viewForChapter(chapter: Located): CameraView {
+export function isCompactViewport(): boolean {
+  return typeof window !== "undefined" && window.innerWidth < COMPACT_MAX;
+}
+
+export function chapterBearing(lng: number): number {
+  return -16 - (Math.abs(lng) % 5);
+}
+
+export function compactWellHeight(
+  padding?: MapPadding | null,
+  viewportHeight = typeof window !== "undefined" ? window.innerHeight : 667,
+): number {
+  if (padding) {
+    return Math.max(0, viewportHeight - padding.top - padding.bottom);
+  }
+  return Math.max(0, Math.round(viewportHeight * (1 - 0.22 - 0.48)));
+}
+
+/** Move the camera target along bearing so the pin falls toward the bottom of the well. */
+export function lookAheadCenter(
+  pin: GeoPoint,
+  bearing: number,
+  zoom: number,
+  wellHeight: number,
+): [number, number] {
+  const degrees =
+    wellHeight * LOOK_AHEAD_WELL_FRACTION * (360 / (512 * 2 ** zoom));
+  const rad = (bearing * Math.PI) / 180;
+  const cosLat = Math.max(0.2, Math.cos((pin.lat * Math.PI) / 180));
+  return [
+    pin.lng + (degrees * Math.sin(rad)) / cosLat,
+    pin.lat + degrees * Math.cos(rad),
+  ];
+}
+
+export type ChapterViewOptions = {
+  compact?: boolean;
+  padding?: MapPadding | null;
+};
+
+export function viewForChapter(
+  chapter: Located,
+  options: ChapterViewOptions = {},
+): CameraView {
+  const compact = options.compact ?? isCompactViewport();
+  const bearing = chapterBearing(chapter.location.lng);
+  const zoom = compact ? PHONE_CHAPTER_ZOOM : CHAPTER_ZOOM;
+  const center = compact
+    ? lookAheadCenter(
+        chapter.location,
+        bearing,
+        zoom,
+        compactWellHeight(options.padding),
+      )
+    : ([chapter.location.lng, chapter.location.lat] as [number, number]);
+
   return {
-    center: [chapter.location.lng, chapter.location.lat],
-    zoom: CHAPTER_ZOOM,
+    center,
+    zoom,
     pitch: CHAPTER_PITCH,
-    bearing: -16 - (Math.abs(chapter.location.lng) % 5),
+    bearing,
     roll: 0,
   };
 }
@@ -128,7 +194,7 @@ export function flyPadding(measured?: MapPadding | null): MapPadding {
   }
   const width = window.innerWidth;
   const height = window.innerHeight;
-  if (width >= 768) {
+  if (width >= COMPACT_MAX) {
     return {
       top: Math.round(height * 0.08),
       bottom: Math.round(height * 0.155),
@@ -143,13 +209,6 @@ export function flyPadding(measured?: MapPadding | null): MapPadding {
     right: 16,
   };
 }
-
-export type MapPadding = {
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
 
 export function paddingFromRects(frame: DOMRect, well: DOMRect): MapPadding {
   return {
