@@ -5,7 +5,8 @@
   --void: #07080c;
   --background: #07080c;
   --foreground: #f6f4f0;
-  --split-type: 38.2%;
+  --split-type: 38.2vw;
+  --split-read: 61.8vw;
   --measure: 65ch;
   --track-education: 8px;
   --track-founder: 16px;
@@ -19,6 +20,15 @@
     --track-founder: 16px;
     --track-fte: 44px;
     --track-sublane: 9px;
+  }
+
+  /* Title stays on the golden-ratio type column; the story can grow to a reading measure. */
+  .journey-title-col {
+    max-width: min(36rem, calc(var(--split-type) - 3.5rem));
+  }
+
+  .journey-read-col {
+    max-width: min(48rem, calc(var(--split-read) - 4rem));
   }
 }
 

@@ -33,6 +33,9 @@ const GlobeCanvas = dynamic(() => import("@/components/globe/GlobeCanvas"), {
   loading: () => <div className="absolute inset-0 bg-[#07080c]" />,
 });
 
+const SIDE_PANEL_FRAME =
+  "pointer-events-auto journey-read-col flex min-h-0 min-w-0 flex-1 flex-col self-stretch overflow-hidden";
+
 type ExperienceProps = {
   chapters: Chapter[];
   profile: Profile;
@@ -242,15 +245,15 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               : collapsed
                 ? "shrink-0 max-md:max-h-[46%] flex-col md:min-h-0 md:flex-1"
                 : sidePanel
-                  ? "shrink-0 flex-col md:min-h-0 md:flex-1 md:flex-row md:items-start md:justify-between md:gap-8"
+                  ? "shrink-0 flex-col md:min-h-0 md:flex-1 md:flex-row md:items-stretch md:justify-between md:gap-8"
                   : "shrink-0 flex-col md:min-h-0 md:flex-1"
           }`}
         >
           <div
             className={`flex min-h-0 flex-col ${
               sidePanel
-                ? "md:max-w-[min(36rem,calc(38.2vw-3.5rem))] md:shrink-0"
-                : "min-h-0 w-full flex-1 overflow-hidden md:max-w-[min(36rem,calc(38.2vw-3.5rem))]"
+                ? "journey-title-col md:shrink-0"
+                : "journey-read-col min-h-0 w-full flex-1 overflow-hidden"
             }`}
           >
             <div ref={overheadRef} className="shrink-0">
@@ -378,7 +381,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           </div>
 
           {sidePanel && started ? (
-            <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
+            <div className={SIDE_PANEL_FRAME}>
               <ChapterPanel
                 chapters={chapters}
                 chapter={chapter}
@@ -399,7 +402,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               />
             </div>
           ) : sidePanel && !started && !collapsed ? (
-            <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
+            <div className={SIDE_PANEL_FRAME}>
               <div
                 ref={panelRef}
                 className="flex min-h-0 flex-1 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82"
