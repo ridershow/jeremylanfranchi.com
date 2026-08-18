@@ -108,7 +108,7 @@ export function ChapterPanel({
           </p>
           <p className="mt-2 text-base leading-[1.65] text-white/78">
             That&apos;s the story so far. If you want to work together,
-            talk pictures, or just say hi —
+            talk pictures, or just say hi, the door is open.
           </p>
           <Link
             href="/contact"

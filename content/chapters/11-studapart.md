@@ -4,7 +4,7 @@ title: Growth Marketing Manager
 kind: work
 start: "2019-04-01"
 end: "2019-09-01"
-kicker: Still the 18th
+kicker: Student housing, growth
 company: Studapart
 companyHref: https://www.studapart.com
 track: fte
@@ -15,11 +15,11 @@ location:
 moments:
   - title: Rooms near school
     kind: work
-    period: Apr 2019 — Sep 2019
+    period: Apr 2019 to Sep 2019
     href: https://www.studapart.com
-    body: A Paris startup helping students find a place near school, including overseas students looking for mid to long-term rent.
+    body: A Paris startup helping students find a place near school, including people arriving from overseas for a mid to long-term rent.
 ---
 
-Studapart — student housing, schools, people arriving in France who needed a room.
+Growth Marketing Manager at Studapart. Student housing: rooms near school, including people arriving from overseas who needed a place that week.
 
-Growth again. Then I quit, to build the agency I kept briefing other people to run.
+I worked the NPS of students and landlords. Booking activation climbed up to +70% in specific clusters. I tightened customer-journey tracking so we could see where people actually dropped. Growth for a product that has to work the moment someone lands in France.

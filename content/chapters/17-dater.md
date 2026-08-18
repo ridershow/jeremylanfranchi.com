@@ -5,7 +5,7 @@ kind: work
 start: "2026-02-01"
 end: "2026-02-28"
 dateLabel: Feb 2026
-kicker: Dater · a private app
+kicker: Dater · a private iOS app
 company: Dater
 track: founder
 location:
@@ -16,9 +16,9 @@ moments:
   - title: Notes that stay with you
     kind: work
     period: Feb 2026
-    body: An iOS app to track your dating life. Self-hosted on the phone — no server, just private notes that stay with you.
+    body: An iOS app I designed and shipped. Self-hosted on the phone. No server. Private notes that stay on the device.
 ---
 
-February 2026. Same apartment, a side brief. Dater — an iOS app to track your dating life.
+I designed and shipped Dater, a private iOS app. Self-hosted on the phone. No server. Notes that stay with you.
 
-Self-hosted on the phone. No server. Private notes that stay with you. The GitGuardian desk is still there. This one is just for me.
+A product brief I wrote for myself: privacy as a feature, not a promise. I wanted to see if I could take an idea to the device without handing the data to a backend. I could.

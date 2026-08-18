@@ -10,12 +10,12 @@ location:
   lat: 41.3874
   lng: 2.1686
 moments:
-  - title: The work, in the light
+  - title: Living abroad
     kind: life
-    period: 2013 — 2014
-    body: UrbanArtt and Ditched were no longer launches. They were the work — athletes, travel, photography, a site growing into an app and a magazine.
+    period: 2013 to 2014
+    body: A year in Barcelona. New country, a language I already loved now in daily life, a city you learn by walking it.
 ---
 
-September 2013. A year in Barcelona. Mediterranean light, a language I already loved, and a life split between the brand and the media.
+September 2013. I moved to Barcelona for a year. Mediterranean light, a language I already loved, a city that rewards people who keep looking.
 
-UrbanArtt and Ditched were no longer launches. They were the work. After twelve months, not Paris yet — back to Rueil, for one more year of building.
+I was not on holiday. I was living and working from another country, staying open to a different tempo and a different street. International life as practice, not as a postcard.

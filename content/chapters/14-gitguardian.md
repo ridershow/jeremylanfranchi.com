@@ -4,7 +4,7 @@ title: Growth Marketing Manager
 kind: work
 start: "2021-09-21"
 end: "2022-12-31"
-kicker: GitGuardian · first seat
+kicker: GitGuardian · Growth
 company: GitGuardian
 companyHref: https://www.gitguardian.com
 track: fte
@@ -15,11 +15,11 @@ location:
 moments:
   - title: Secrets, then conversion
     kind: work
-    period: Sep 2021 — Dec 2022
+    period: Sep 2021 to Dec 2022
     href: https://www.gitguardian.com
-    body: PLG and CRO for a code-security product used by hundreds of thousands of developers. Same invent-design-prototype-industrialize loop, now in cybersecurity.
+    body: PLG and CRO for a code-security product used by hundreds of thousands of developers. Invent, design, prototype, industrialize, now in cybersecurity.
 ---
 
-September 21, 2021. Same apartment, new desk. GitGuardian — secrets detection for the DevOps generation.
+Growth Marketing Manager at GitGuardian, the code security platform for the DevOps generation. Secrets detection, used by hundreds of thousands of developers.
 
-Not a new city. A new title. The first of three at the same company: growth marketing manager, learning how developers actually find, try, and stay.
+PLG and conversion. I learned how developers actually find, try, and stay. Same loop I trust: invent, design, prototype, industrialize. This time in cybersecurity, for a product that has to earn trust.

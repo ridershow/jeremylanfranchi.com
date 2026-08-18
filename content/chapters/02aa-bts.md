@@ -4,7 +4,7 @@ title: Industrial & mechanical engineering
 kind: study
 start: "2010-09-01"
 end: "2011-07-31"
-dateLabel: Alongside the apprenticeship
+dateLabel: Industrial product design
 kicker: SUPII Mécavénir · Puteaux
 company: SUPII Mécavénir
 track: education
@@ -16,9 +16,9 @@ moments:
   - title: Industrial and mechanical
     kind: study
     period: Puteaux
-    body: Hands on metal and drawings. Invent, design, prototype — the school version of the loop that Renault was running in parallel.
+    body: "A BTS in industrial product design. Hands on metal and drawings. Invent, design, prototype: the school version of a loop I still trust."
 ---
 
-BTS at SUPII Mécavénie in Puteaux — industrial and mechanical. The apprenticeship at Renault ran alongside it.
+A BTS in industrial product design at SUPII Mécavénir in Puteaux. Mechanical engineering with a brief that was never theoretical for long.
 
-Invent, design, prototype. Then September 2011, and the next school is on the Pacific.
+Invent, design, prototype. I learned to make an idea survive a drawing, then a material, then a constraint. That loop still feels like home.

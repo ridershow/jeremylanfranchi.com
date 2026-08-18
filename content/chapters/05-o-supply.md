@@ -4,7 +4,7 @@ title: Founder
 kind: work
 start: "2014-10-01"
 end: "2015-09-01"
-kicker: O Supply Co. · a new one
+kicker: O Supply Co. · Founder
 company: O Supply Co.
 track: founder
 location:
@@ -12,12 +12,12 @@ location:
   lat: 48.8765
   lng: 2.1812
 moments:
-  - title: Launch from hometown
+  - title: Another company, another brief
     kind: work
-    period: 2014 — 2015
-    body: A third company from the year back in Rueil, alongside Ditched and UrbanArtt — hometown as a studio.
+    period: 2014 to 2015
+    body: I founded O Supply Co. A company I started because I wanted another canvas, and I was not waiting for permission.
 ---
 
-A new one from the year back in Rueil. O Supply Co., launched alongside the two that already existed.
+I founded O Supply Co. Another company, another brief I wrote for myself.
 
-Hometown as a studio. Then a house with a record label, a few kilometers west, with a best friend.
+I was already in the habit of building. This one started from a blank page in Rueil-Malmaison. Invent first, then make it real.

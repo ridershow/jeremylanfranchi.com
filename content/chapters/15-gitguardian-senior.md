@@ -4,7 +4,7 @@ title: Senior Growth Marketing Manager
 kind: work
 start: "2023-01-01"
 end: "2025-10-31"
-kicker: GitGuardian · wider map
+kicker: GitGuardian · USA and EMEA
 company: GitGuardian
 companyHref: https://www.gitguardian.com
 track: fte
@@ -15,11 +15,11 @@ location:
 moments:
   - title: USA and EMEA
     kind: work
-    period: Jan 2023 — Oct 2025
+    period: Jan 2023 to Oct 2025
     href: https://www.gitguardian.com
-    body: Product-led programs and CRO across two markets. The field work starts here — OWASP, CNCF, the rooms where developers and AppSec already gather.
+    body: "Product-led programs and CRO across two markets. Showing up where developers and AppSec already gather: OWASP, CNCF, the rooms that are not a landing page."
 ---
 
-Same company, wider brief. Senior growth marketing manager — USA and EMEA, still from the 9th.
+Senior Growth Marketing Manager at GitGuardian. Same product, a wider map: USA and EMEA.
 
-The product-led work stays. What changes is the map: associations, communities, showing up where the people we write for already are. The next title is still GitGuardian.
+Product-led programs and CRO across two markets. I started showing up where developers and AppSec already gather: OWASP, CNCF, the rooms that are not a landing page. I like a brief that asks you to leave the desk.

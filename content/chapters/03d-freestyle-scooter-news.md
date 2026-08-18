@@ -14,12 +14,10 @@ location:
 moments:
   - title: The reference blog
     kind: work
-    period: Jun — Dec 2012
-    body: Webmaster for the French and English reference site covering the freestyle scooter world — news, both languages, the scene as it moved.
+    period: Jun to Dec 2012
+    body: Webmaster for the French and English reference site covering the freestyle scooter world. News, both languages, the scene as it moved.
 ---
 
-June 2012. A paid seat on the web: webmaster at Freestyle Scooter News, the French and English reference blog for the sport.
+A paid seat on the web: webmaster at Freestyle Scooter News, the French and English reference blog for the sport.
 
-French Toast was print. This was the site — news in both languages, kept current from San Francisco while EF was still running.
-
-Six months. Then the year turns, and Ditched and UrbanArtt are the ones that stay.
+News in both languages, kept current, for a scene that moved fast. Six months of shipping the site as the place people actually checked. I liked the constraint of a live publication. The story is only as good as today's homepage.

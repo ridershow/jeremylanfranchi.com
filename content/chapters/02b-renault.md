@@ -4,7 +4,7 @@ title: Apprentice at Renault
 kind: work
 start: "2010-09-01"
 end: "2011-07-31"
-dateLabel: Alongside the BTS
+dateLabel: Seat design
 kicker: Renault · Seat designer
 company: Renault
 companyHref: https://www.renault.com
@@ -17,9 +17,9 @@ moments:
   - title: Car manufacturing
     kind: work
     period: Two years
-    body: Invent, design, prototype — the factory version of the same loop, while the BTS ran in Puteaux.
+    body: Automotive seats for the Renault Master. Plastics, steel, Catia V5, crash and safety systems. Design that had to hold in the real world.
 ---
 
-Two years in car manufacturing, next to the BTS. Renault, while the hometown years were still running.
+Renault. Two years as an automotive seat designer on the new Renault Master, utilitarian vehicles, a factory that does not applaud a pretty drawing.
 
-Industrial design in the daytime. Extreme sport was already pulling harder than the factory floor.
+I designed plastics and steel parts in Catia V5, in a busy industrial environment. Prototype drawings. Crash and safety: seat belts, airbags, the unglamorous details that keep people intact. I liked the constraint. I liked shipping something that had to work.

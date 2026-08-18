@@ -19,11 +19,9 @@ moments:
   - title: This globe
     kind: work
     period: Built here
-    body: The route, the pins, the stories. A personal site made in the room it ends in.
+    body: The route, the pins, the stories. A personal site made in the room it lives in.
 ---
 
-August 2026. Back to San Francisco — not the EF years, not the hills as home. One night at Hotel Zetta, SoMa, for The Leverage Launch with Cursor.
+August 2026. One night at Hotel Zetta in SoMa, for The Leverage Launch with Cursor.
 
-Fifty people shipping personal sites. Dinner, drinks, an hour of hacktime. Inspired by a weirder, more beautiful internet — and a brief to make one of your own.
-
-The globe started on a scooter in Rueil, 2007. It ends in this room. The last pin is the night the map was drawn.
+Fifty founders and operators. Dinner, drinks, an hour of hack time. A brief to ship a personal site before last call, inspired by a weirder, more beautiful internet. I built this globe in the room. Route, pins, stories. I like a deadline that makes you actually publish.

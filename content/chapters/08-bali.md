@@ -18,18 +18,18 @@ moments:
   - title: Le Wagon
     kind: study
     period: 3 months
-    body: Bootcamp in Canggu — Ruby on Rails, the full stack. WordPress was already the freelance living; this was enough to build more than a site.
+    body: Full-stack bootcamp in Canggu. HTML, CSS, JavaScript, SQL, git, Ruby on Rails. Designed, built, and shipped to production.
   - title: Travel pictures
     kind: photo
     period: 2018
-    body: Three months in the light. The island stuck. Scuba and underwater photography come later; the pull toward the water starts here.
+    body: Three months in the light. A new island, a camera that stayed curious, and water that kept pulling the eye.
 photos:
   - src: /photos/bali/bootcamp-hotel.jpg
-    caption: The bootcamp at FRii Echo Beach — laptops on the hotel terrace, Canggu.
+    caption: The bootcamp at FRii Echo Beach. Laptops on the hotel terrace, Canggu.
   - src: /photos/bali/underwater.jpg
-    caption: The pull toward the water starts here.
+    caption: The island, from below.
 ---
 
-Canggu, Bali. Three months at Le Wagon, in a hotel: FRii Echo Beach. WordPress was already the freelance living; Ruby on Rails on the terrace was how to ship more than a site.
+Canggu, Bali. I joined Le Wagon, batch 163, at FRii Echo Beach: a full-stack bootcamp in HTML, CSS, JavaScript, SQL, git, and Ruby on Rails.
 
-A pause that was also a school. Then back to France, with a deeper trade in the bag.
+Nine intensive weeks inside a longer stay. We designed, built, and shipped to production: an Airbnb clone, and a Rails prototype of a music community using the Spotify API. A new country, a new stack, classmates from everywhere. I came to learn how to ship more than a page. I left having done it.

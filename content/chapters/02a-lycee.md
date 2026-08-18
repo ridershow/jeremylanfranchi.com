@@ -13,12 +13,12 @@ location:
   lat: 48.8765
   lng: 2.1812
 moments:
-  - title: The hometown school
+  - title: STI Génie Mécanique
     kind: study
     period: High school
-    body: Lycée Richelieu, Rueil-Malmaison. Still running next to the sport, before the BTS and the factory floor.
+    body: Baccalauréat STI in mechanical engineering. Design, CAD, automation, industrial process. School with a workshop attached to it.
 ---
 
-Lycée Richelieu. Still Rueil, still the same pin — the classroom next to the sport.
+Lycée Richelieu in Rueil-Malmaison. A Baccalauréat STI in mechanical engineering: design, CAD, automation, industrial process.
 
-High school, then a BTS in Puteaux, then the Pacific. The school years sit here so the timeline can show them.
+I liked school that asked for drawings and then for parts. Systems, materials, how things are actually made. I was already training my hands and my eye, not just collecting grades.

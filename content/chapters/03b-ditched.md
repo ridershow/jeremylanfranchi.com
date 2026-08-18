@@ -15,11 +15,11 @@ location:
 moments:
   - title: Site, then app, then magazine
     kind: work
-    period: 2013 — 2016
+    period: 2013 to 2016
     href: https://ditched.dk
-    body: A media for freestyle scooter culture through urban art. Started as a site — later an iOS and Android app, then a free bi-monthly magazine.
+    body: A media for freestyle scooter culture through urban art. Started as a site, then an iOS and Android app, then a free bi-monthly magazine.
 ---
 
-Something leaves the notebook. Ditched.dk — a media for freestyle scooter culture through urban art. Founded here, meant to travel.
+I founded Ditched.dk: a media for the freestyle scooter community, told through urban art. I wanted the scene to look as creative as it already was.
 
-Site first. Then an app. Then a free bi-monthly magazine. San Francisco is the launch pin. Barcelona and Rueil keep building it.
+I led a team of four on content. More than 1,200 articles. A Facebook and Instagram community past 10,000. An iOS and Android app. A free bi-monthly magazine: 5,000 copies, in 150 specialized shops worldwide. SEO, ads, the whole stack of making a media exist. I was not waiting for someone else to publish us.

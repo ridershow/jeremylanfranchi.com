@@ -15,11 +15,11 @@ location:
 moments:
   - title: Riders, parts, pictures
     kind: work
-    period: 2012 — 2016
+    period: 2012 to 2016
     href: https://www.urbanartt.com
-    body: Freestyle scooter brand, street culture, parts designed in France. Associate, team manager, photographer — launched from this chapter, sold worldwide.
+    body: Freestyle scooter brand, street culture, parts designed in France. Founding partner, team manager, photographer. Sold worldwide.
 ---
 
-The other thing that leaves the notebook: UrbanArtt. Freestyle scooter brand, street culture, parts designed in France.
+I co-founded UrbanArtt. A freestyle scooter brand with street culture in the DNA, and parts designed in France.
 
-Associate, team manager, photographer. Also born in this chapter. The athletes, the travel, the pictures — Barcelona and Rueil are the years it actually moves.
+Founding partner, team manager, photographer. I built and managed an international team of pro athletes. I designed parts in CAD, with drawings and strength analysis. I produced the pictures, coordinated the videos, ran the travel, and held the brand. A product company I helped invent, then took on the road.

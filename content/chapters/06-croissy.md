@@ -10,14 +10,11 @@ location:
   lat: 48.8775
   lng: 2.1422
 moments:
-  - title: With Antoine
-    kind: life
-    body: Moved into the Krispy House with my best friend Antoine. A house, a crew, a label in the living room.
   - title: Krispy Records
     kind: work
-    body: Supporting Krispy Records from inside the house — the music, the people, the nights in 78.
+    body: Supporting Krispy Records from the inside. The music, the people, the work of a label that lived close to the studio floor.
 ---
 
-Croissy-sur-Seine, Yvelines. The Krispy House, with Antoine. Not a company apartment — a house you share with your best friend and a record label.
+Croissy-sur-Seine. I based myself here and put time into Krispy Records: the music, the people, the work of a label that lived close to the making.
 
-Krispy Records lived there with us. The work from Rueil continued; the soundtrack changed. Digital marketing was about to get a proper school.
+A smaller town west of Paris, and a creative operation I chose to support from the inside. I like rooms where something is being made.
