@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import type { RefObject } from "react";
+import { useCallback, useEffect, useState, type RefObject } from "react";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
+import { PhotoLightbox } from "@/components/chapter/PhotoLightbox";
 import { ReadToggle } from "@/components/chapter/ReadToggle";
 import { formatRange } from "@/lib/dates";
 import { tenureDuration, tenureFor, type TenureGroup } from "@/lib/tenure";
@@ -389,11 +390,35 @@ type ChapterPhotosProps = {
   reducedMotion: boolean;
 };
 
+function thumbnailLabel(photo: Photo, chapterTitle: string, index: number) {
+  if (photo.caption) return `View ${photo.caption}`;
+  return `View ${chapterTitle} photo ${index + 1}`;
+}
+
 function ChapterPhotos({
   photos,
   chapterTitle,
   reducedMotion,
 }: ChapterPhotosProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const photoKey = photos.map((photo) => photo.src).join("|");
+
+  useEffect(() => {
+    setOpenIndex(null);
+  }, [chapterTitle, photoKey]);
+
+  const closeLightbox = useCallback(() => setOpenIndex(null), []);
+  const showPrev = useCallback(() => {
+    setOpenIndex((current) =>
+      current === null ? current : (current - 1 + photos.length) % photos.length,
+    );
+  }, [photos.length]);
+  const showNext = useCallback(() => {
+    setOpenIndex((current) =>
+      current === null ? current : (current + 1) % photos.length,
+    );
+  }, [photos.length]);
+
   if (photos.length === 0) return null;
 
   return (
@@ -408,12 +433,20 @@ function ChapterPhotos({
             duration: 0.45,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={photo.src}
-            alt={photo.caption || chapterTitle}
-            className="h-36 w-full object-cover md:h-44"
-          />
+          <button
+            type="button"
+            onClick={() => setOpenIndex(index)}
+            aria-haspopup="dialog"
+            aria-label={thumbnailLabel(photo, chapterTitle, index)}
+            className="block w-full cursor-zoom-in"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photo.src}
+              alt={photo.caption || chapterTitle}
+              className="h-36 w-full object-cover md:h-44"
+            />
+          </button>
           {photo.caption ? (
             <figcaption className="mt-1.5 text-[11px] tracking-wide text-white/40">
               {photo.caption}
@@ -421,6 +454,14 @@ function ChapterPhotos({
           ) : null}
         </motion.figure>
       ))}
+      <PhotoLightbox
+        photos={photos}
+        chapterTitle={chapterTitle}
+        openIndex={openIndex}
+        onClose={closeLightbox}
+        onPrev={showPrev}
+        onNext={showNext}
+      />
     </div>
   );
 }
