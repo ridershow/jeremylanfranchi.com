@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { MD_MIN } from "@/hooks/useMedia";
 
 export function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -75,7 +76,8 @@ export function useJourney(
 
   useEffect(() => {
     if (!playing) return;
-    const dwell = reducedMotion ? 3500 : 6200;
+    const phone = window.innerWidth < MD_MIN;
+    const dwell = reducedMotion ? 3500 : phone ? 8200 : 6200;
     const id = window.setTimeout(() => {
       setIndex((current) => {
         if (current >= chapterCount - 1) {
