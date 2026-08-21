@@ -316,7 +316,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           className={
             textFirst
               ? "h-0 shrink-0 overflow-hidden md:hidden"
-              : "relative min-h-[160px] flex-1 md:hidden"
+              : "relative min-h-[160px] flex-1 overflow-hidden md:hidden"
           }
         >
           {phone && albumChrome && chapter ? (
@@ -335,7 +335,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
 
         <div
           ref={contentRef}
-          className={`flex min-h-0 overflow-hidden px-4 md:px-8 lg:px-10 ${
+          className={`relative flex min-h-0 overflow-hidden px-4 md:px-8 lg:px-10 ${
             textFirst
               ? "min-h-0 flex-1 flex-col"
               : collapsed
@@ -346,7 +346,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           }`}
         >
           <div
-            className={`flex min-h-0 flex-col ${
+            className={`relative z-20 flex min-h-0 flex-col ${
               sidePanel
                 ? "md:max-w-[min(36rem,calc(38.2vw-3.5rem))] md:shrink-0"
                 : "min-h-0 w-full flex-1 overflow-hidden md:max-w-[min(36rem,calc(38.2vw-3.5rem))]"
@@ -477,7 +477,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           </div>
 
           {sidePanel && started ? (
-            <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
+            <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
               <ChapterPanel
                 chapters={chapters}
                 chapter={chapter}
@@ -498,7 +498,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               />
             </div>
           ) : sidePanel && !started && !collapsed ? (
-            <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
+            <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
               <div
                 ref={panelRef}
                 className="flex min-h-0 flex-1 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82"
@@ -519,6 +519,18 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               </div>
             </div>
           ) : null}
+
+          {!phone && albumChrome ? (
+            <ChapterAlbum
+              photos={chapter.photos}
+              chapterTitle={chapter.title}
+              open={albumOpen}
+              reducedMotion={reducedMotion}
+              albumRef={setAlbumEl}
+              onToggle={toggleAlbum}
+              onSelect={setLightboxIndex}
+            />
+          ) : null}
         </div>
 
         <div
@@ -534,18 +546,6 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           />
         </div>
       </div>
-
-      {!phone && albumChrome ? (
-        <ChapterAlbum
-          photos={chapter.photos}
-          chapterTitle={chapter.title}
-          open={albumOpen}
-          reducedMotion={reducedMotion}
-          albumRef={setAlbumEl}
-          onToggle={toggleAlbum}
-          onSelect={setLightboxIndex}
-        />
-      ) : null}
 
       {lightboxIndex !== null &&
       lightboxChapter === index &&
