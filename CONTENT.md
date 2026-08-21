@@ -7,7 +7,7 @@ Stories, dates, and coordinates live in files. The globe reads them at build tim
 1. Create `content/chapters/08-your-slug.md` (number prefix keeps files sorted in the folder; the site sorts by `start` date).
 2. Copy the frontmatter below. Set `lat` / `lng` for the pin.
 3. Write the story under the frontmatter.
-4. Drop photographs into `public/photos/<slug>/` (`jpg`, `png`, `webp`, `avif`). They appear automatically.
+4. Drop photographs into `public/photos/<slug>/` (`jpg`, `png`, `webp`, `avif`). They appear automatically in that chapter’s destination album (right side on desktop, filmstrip over the globe on phone) — not inline under the story.
 5. Restart or refresh the dev server.
 
 ```yaml
@@ -58,4 +58,5 @@ Paragraphs of the story. Separate them with a blank line.
 - Consecutive chapters with the same `company` share a timeline rail, a time-in-org label, and a role ladder. Rails sit on a color lane (blue education, coral founder, gold FTE) and stretch across the real start–end dates, not just a single tick.
 - Photography trips you have not lived in can be `kind: travel`.
 - `dateLabel` is useful when a date is approximate (Bali, childhood).
-- Leave `photos:` out if you only drop files in the folder.
+- Leave `photos:` out if you only drop files in the folder. They still appear in the destination album.
+- Click a thumbnail to open it fullscreen. Hide the album to drag the globe.

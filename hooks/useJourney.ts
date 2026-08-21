@@ -16,13 +16,16 @@ export function usePrefersReducedMotion() {
   return reduced;
 }
 
-export function useJourney(chapterCount: number, onBeyondEnd?: () => void) {
+export function useJourney(
+  chapterCount: number,
+  onBeyondEnd?: () => void,
+  keyboardLocked = false,
+) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const beyondEnd = useRef(onBeyondEnd);
-  beyondEnd.current = onBeyondEnd;
 
   const goTo = useCallback(
     (nextIndex: number) => {
@@ -90,14 +93,19 @@ export function useJourney(chapterCount: number, onBeyondEnd?: () => void) {
   const goStartRef = useRef(goStart);
   const goEndRef = useRef(goEnd);
   const togglePlayRef = useRef(togglePlay);
-  nextRef.current = next;
-  prevRef.current = prev;
-  goStartRef.current = goStart;
-  goEndRef.current = goEnd;
-  togglePlayRef.current = togglePlay;
+
+  useEffect(() => {
+    beyondEnd.current = onBeyondEnd;
+    nextRef.current = next;
+    prevRef.current = prev;
+    goStartRef.current = goStart;
+    goEndRef.current = goEnd;
+    togglePlayRef.current = togglePlay;
+  }, [onBeyondEnd, next, prev, goStart, goEnd, togglePlay]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (keyboardLocked) return;
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       const target = event.target as HTMLElement | null;
       const tag = target?.tagName;
@@ -133,7 +141,7 @@ export function useJourney(chapterCount: number, onBeyondEnd?: () => void) {
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [keyboardLocked]);
 
   return {
     index,
