@@ -8,7 +8,7 @@ import { formatRange } from "@/lib/dates";
 import { tenureDuration, tenureFor, type TenureGroup } from "@/lib/tenure";
 import { trackTheme } from "@/lib/tracks";
 import type { ContentLayoutMode } from "@/hooks/useContentLayout";
-import type { Chapter, Moment, Photo } from "@/lib/types";
+import type { Chapter, Moment } from "@/lib/types";
 
 type ChapterPanelProps = {
   chapters: Chapter[];
@@ -90,11 +90,6 @@ export function ChapterPanel({
         ))}
       </div>
 
-      <ChapterPhotos
-        photos={chapter.photos}
-        chapterTitle={chapter.title}
-        reducedMotion={reducedMotion}
-      />
       <ChapterMoments
         moments={chapter.moments}
         reducedMotion={reducedMotion}
@@ -400,48 +395,6 @@ function roleWeight(role: TenureGroup["roles"][number]) {
     ? Date.now()
     : new Date(`${role.chapter.end}T00:00:00`).getTime();
   return Math.max(1, end - start);
-}
-
-type ChapterPhotosProps = {
-  photos: Photo[];
-  chapterTitle: string;
-  reducedMotion: boolean;
-};
-
-function ChapterPhotos({
-  photos,
-  chapterTitle,
-  reducedMotion,
-}: ChapterPhotosProps) {
-  if (photos.length === 0) return null;
-
-  return (
-    <div className="mt-6 space-y-3">
-      {photos.map((photo, index) => (
-        <motion.figure
-          key={photo.src}
-          initial={reducedMotion ? false : { y: 14, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{
-            delay: reducedMotion ? 0 : 0.06 * index,
-            duration: 0.45,
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={photo.src}
-            alt={photo.caption || chapterTitle}
-            className="h-36 w-full object-cover md:h-44"
-          />
-          {photo.caption ? (
-            <figcaption className="mt-1.5 text-[11px] tracking-wide text-white/40">
-              {photo.caption}
-            </figcaption>
-          ) : null}
-        </motion.figure>
-      ))}
-    </div>
-  );
 }
 
 type ChapterMomentsProps = {

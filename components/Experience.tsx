@@ -11,14 +11,17 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { ChapterAlbum } from "@/components/chapter/ChapterAlbum";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
 import { ChapterPanel, ReadToggle } from "@/components/chapter/ChapterPanel";
+import { PhotoLightbox } from "@/components/chapter/PhotoLightbox";
 import { Wordmark } from "@/components/chrome/Wordmark";
 import { Timeline } from "@/components/timeline/Timeline";
 import { useJourney } from "@/hooks/useJourney";
 import { useContentLayout } from "@/hooks/useContentLayout";
 import { useViewport } from "@/hooks/useMedia";
 import {
+  flyPadding,
   isSamePin,
   paddingFromRects,
   type MapPadding,
@@ -102,6 +105,8 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const goContact = useCallback(() => {
     router.push("/contact");
   }, [router]);
+  const [albumOpen, setAlbumOpen] = useState(true);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const {
     index,
     playing,
@@ -114,7 +119,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     goStart,
     goEnd,
     reducedMotion,
-  } = useJourney(chapters.length, goContact);
+  } = useJourney(chapters.length, goContact, lightboxIndex !== null);
   const { phone } = useViewport();
   const frameRef = useRef<HTMLDivElement>(null);
   const wellRef = useRef<HTMLDivElement>(null);
@@ -123,23 +128,58 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const overheadRef = useRef<HTMLDivElement>(null);
+  const [albumEl, setAlbumEl] = useState<HTMLDivElement | null>(null);
   const [mapPadding, setMapPadding] = useState<MapPadding | null>(null);
   const [reading, setReading] = useState(false);
 
   const chapter = chapters[index];
   const collapsed = playing;
   const textFirst = phone && reading && !playing;
-  const layoutMode = useContentLayout({
+  const hasPhotos = Boolean(started && chapter && chapter.photos.length > 0);
+  const albumChrome = hasPhotos && !collapsed && !textFirst;
+  const albumVisible = albumChrome && albumOpen;
+  const photoCount = chapter?.photos.length ?? 0;
+  const measuredLayout = useContentLayout({
     enabled: !phone && !collapsed,
-    contentKey: `${started ? chapter.slug : "orbit"}-${index}`,
+    contentKey: `${started ? (chapter?.slug ?? "orbit") : "orbit"}-${index}`,
     titleRef,
     panelRef,
     timelineRef,
     contentRef,
     overheadRef,
   });
+  const layoutMode =
+    albumVisible && measuredLayout === "side" ? "compact" : measuredLayout;
   const sidePanel = layoutMode === "side";
   const compactTitle = layoutMode === "compact";
+
+  const [lightboxChapter, setLightboxChapter] = useState(index);
+  if (lightboxChapter !== index) {
+    setLightboxChapter(index);
+    setLightboxIndex(null);
+  }
+
+  const toggleAlbum = useCallback(() => {
+    setAlbumOpen((open) => !open);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+  }, []);
+
+  const lightboxPrev = useCallback(() => {
+    setLightboxIndex((current) => {
+      if (current === null || photoCount === 0) return null;
+      return (current + photoCount - 1) % photoCount;
+    });
+  }, [photoCount]);
+
+  const lightboxNext = useCallback(() => {
+    setLightboxIndex((current) => {
+      if (current === null || photoCount === 0) return null;
+      return (current + 1) % photoCount;
+    });
+  }, [photoCount]);
 
   const toggleReading = useCallback(() => {
     setReading((open) => {
@@ -167,25 +207,63 @@ export function Experience({ chapters, profile }: ExperienceProps) {
 
   useEffect(() => {
     const frame = frameRef.current;
-    const well = wellRef.current;
-    if (!frame || !well || !phone || textFirst) {
+    if (!frame || (phone && textFirst)) {
       setMapPadding(null);
       return;
     }
 
     const measure = () => {
-      setMapPadding(paddingFromRects(
-        frame.getBoundingClientRect(),
-        well.getBoundingClientRect(),
-      ));
+      const album = albumEl;
+      if (phone) {
+        const well = wellRef.current;
+        if (!well) {
+          setMapPadding(null);
+          return;
+        }
+        const frameRect = frame.getBoundingClientRect();
+        const padding = paddingFromRects(
+          frameRect,
+          well.getBoundingClientRect(),
+        );
+        if (albumVisible && album) {
+          const albumRect = album.getBoundingClientRect();
+          padding.bottom = Math.max(
+            padding.bottom,
+            Math.round(frameRect.bottom - albumRect.top),
+          );
+        }
+        setMapPadding(padding);
+        return;
+      }
+
+      if (albumVisible && album) {
+        const base = flyPadding();
+        const frameRect = frame.getBoundingClientRect();
+        const albumRect = album.getBoundingClientRect();
+        setMapPadding({
+          ...base,
+          right: Math.max(
+            base.right,
+            Math.round(frameRect.right - albumRect.left),
+          ),
+        });
+        return;
+      }
+
+      setMapPadding(null);
     };
 
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(frame);
-    observer.observe(well);
-    return () => observer.disconnect();
-  }, [phone, collapsed, started, textFirst]);
+    if (wellRef.current) observer.observe(wellRef.current);
+    if (albumEl) observer.observe(albumEl);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [phone, collapsed, started, albumVisible, albumEl, index, textFirst]);
 
   if (!chapter) return null;
 
@@ -215,7 +293,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           started={started}
           onSelect={goTo}
           reducedMotion={reducedMotion}
-          padding={phone ? mapPadding : null}
+          padding={phone || albumVisible ? mapPadding : null}
         />
       </div>
 
@@ -238,9 +316,22 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           className={
             textFirst
               ? "h-0 shrink-0 overflow-hidden md:hidden"
-              : "min-h-[160px] flex-1 md:hidden"
+              : "relative min-h-[160px] flex-1 md:hidden"
           }
-        />
+        >
+          {phone && albumChrome && chapter ? (
+            <ChapterAlbum
+              photos={chapter.photos}
+              chapterTitle={chapter.title}
+              open={albumOpen}
+              phone
+              reducedMotion={reducedMotion}
+              albumRef={setAlbumEl}
+              onToggle={toggleAlbum}
+              onSelect={setLightboxIndex}
+            />
+          ) : null}
+        </div>
 
         <div
           ref={contentRef}
@@ -443,6 +534,32 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           />
         </div>
       </div>
+
+      {!phone && albumChrome ? (
+        <ChapterAlbum
+          photos={chapter.photos}
+          chapterTitle={chapter.title}
+          open={albumOpen}
+          reducedMotion={reducedMotion}
+          albumRef={setAlbumEl}
+          onToggle={toggleAlbum}
+          onSelect={setLightboxIndex}
+        />
+      ) : null}
+
+      {lightboxIndex !== null &&
+      lightboxChapter === index &&
+      chapter.photos[lightboxIndex] ? (
+        <PhotoLightbox
+          photos={chapter.photos}
+          index={lightboxIndex}
+          chapterTitle={chapter.title}
+          reducedMotion={reducedMotion}
+          onClose={closeLightbox}
+          onPrev={lightboxPrev}
+          onNext={lightboxNext}
+        />
+      ) : null}
     </div>
   );
 }
