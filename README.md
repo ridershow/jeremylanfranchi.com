@@ -23,8 +23,8 @@ MX, SPF, and other mail records stay on Hostinger through Cloudflare DNS. They a
 ## Run locally
 
 ```bash
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The first screen is a short intro; **Get started** opens the globe.
@@ -38,8 +38,8 @@ See [CONTENT.md](CONTENT.md). Chapters are markdown. Photographs go in `public/p
 The site is a Next.js static export (`out/`) deployed to the existing Firebase Hosting site. DNS does not change.
 
 ```bash
-npx firebase login
-npm run deploy
+bunx firebase login
+bun run deploy
 ```
 
 `www.jeremylanfranchi.com` should 301 to the apex. If it still 404s, add `www` in Firebase Hosting as a redirect to `jeremylanfranchi.com`, or a Cloudflare Redirect Rule with the same target.

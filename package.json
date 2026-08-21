@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "deploy": "npm run build && firebase deploy --only hosting"
+    "deploy": "bun run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
