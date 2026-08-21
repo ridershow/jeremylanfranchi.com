@@ -10,14 +10,18 @@ import {
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   angularSeparation,
-  flyAnimation,
+  COMPACT_MAX,
+  flightDuration,
+  flightLegs,
   flyPadding,
   greatCircle,
+  isCompactViewport,
   isSamePin,
   MAX_ZOOM,
   MIN_ZOOM,
   ORBIT_VIEW,
   viewForChapter,
+  type FlightLeg,
   type MapPadding,
 } from "@/lib/geo";
 import { globeSky, satelliteStyle } from "@/lib/mapStyle";
@@ -62,6 +66,9 @@ export default function GlobeCanvas({
   const mapRef = useRef<MapLibreMap | null>(null);
   const markers = useRef<Marker[]>([]);
   const arcFrame = useRef(0);
+  const flyGen = useRef(0);
+  const flyTimer = useRef(0);
+  const flying = useRef(false);
   const spinFrame = useRef(0);
   const resumeSpin = useRef(0);
   const spinning = useRef(true);
@@ -100,7 +107,7 @@ export default function GlobeCanvas({
       maxPitch: 52,
       rollEnabled: false,
       pixelRatio:
-        window.innerWidth < 768
+        window.innerWidth < COMPACT_MAX
           ? 1
           : Math.min(1.2, window.devicePixelRatio || 1),
       attributionControl: { compact: true },
@@ -195,6 +202,9 @@ export default function GlobeCanvas({
       window.cancelAnimationFrame(arcFrame.current);
       window.cancelAnimationFrame(spinFrame.current);
       window.clearTimeout(resumeSpin.current);
+      flyGen.current += 1;
+      window.clearTimeout(flyTimer.current);
+      flying.current = false;
       markers.current.forEach((marker) => marker.remove());
       markers.current = [];
       map.remove();
@@ -214,6 +224,9 @@ export default function GlobeCanvas({
 
       if (!started) {
         window.cancelAnimationFrame(arcFrame.current);
+        flyGen.current += 1;
+        window.clearTimeout(flyTimer.current);
+        flying.current = false;
         clearArcs(map);
         return;
       }
@@ -221,8 +234,6 @@ export default function GlobeCanvas({
       spinning.current = false;
       window.cancelAnimationFrame(spinFrame.current);
       window.clearTimeout(resumeSpin.current);
-
-      refreshArcs(map, chapters, activeIndex, reducedRef.current, arcFrame);
 
       const chapter = chapters[activeIndex];
       if (!chapter) return;
@@ -233,11 +244,11 @@ export default function GlobeCanvas({
         !fromOrbit &&
         previous &&
         isSamePin(previous.location, chapter.location);
+      const origin = fromOrbit
+        ? { lat: ORBIT_VIEW.center[1], lng: ORBIT_VIEW.center[0] }
+        : previous?.location ?? chapter.location;
       const distance = fromOrbit
-        ? angularSeparation(
-            { lat: ORBIT_VIEW.center[1], lng: ORBIT_VIEW.center[0] },
-            chapter.location,
-          )
+        ? angularSeparation(origin, chapter.location)
         : previous
           ? angularSeparation(previous.location, chapter.location)
           : 0;
@@ -246,16 +257,33 @@ export default function GlobeCanvas({
 
       if (samePin) return;
 
-      const camera = {
-        ...viewForChapter(chapter),
-        padding: flyPadding(paddingRef.current),
-      };
+      const destination = viewForChapter(chapter);
+      const padding = flyPadding(paddingRef.current);
       if (reducedRef.current) {
-        map.jumpTo(camera);
+        flyGen.current += 1;
+        window.clearTimeout(flyTimer.current);
+        flying.current = false;
+        map.jumpTo({ ...destination, padding });
+        refreshArcs(map, chapters, activeIndex, true, arcFrame, 0);
         return;
       }
 
-      map.flyTo({ ...camera, ...flyAnimation(distance, fromOrbit) });
+      const legs = flightLegs(
+        origin,
+        destination,
+        distance,
+        fromOrbit,
+        isCompactViewport(),
+      );
+      refreshArcs(
+        map,
+        chapters,
+        activeIndex,
+        false,
+        arcFrame,
+        flightDuration(legs),
+      );
+      playFlight(map, legs, padding, flyGen, flyTimer, flying);
     };
 
     whenStyleReady(map, run);
@@ -263,7 +291,7 @@ export default function GlobeCanvas({
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.loaded()) return;
+    if (!map?.loaded() || flying.current) return;
     map.easeTo({ padding: flyPadding(padding), duration: 280 });
   }, [padding]);
 
@@ -289,6 +317,56 @@ function whenStyleReady(map: MapLibreMap, fn: () => void) {
   map.once("style.load", run);
   map.once("load", run);
   window.setTimeout(run, 600);
+}
+
+function playFlight(
+  map: MapLibreMap,
+  legs: FlightLeg[],
+  padding: MapPadding,
+  flyGen: { current: number },
+  flyTimer: { current: number },
+  flying: { current: boolean },
+) {
+  const gen = ++flyGen.current;
+  window.clearTimeout(flyTimer.current);
+  flying.current = true;
+  map.stop();
+
+  const run = (index: number) => {
+    if (gen !== flyGen.current) return;
+    const leg = legs[index];
+    if (!leg) {
+      flying.current = false;
+      return;
+    }
+
+    const camera = { ...leg.view, padding };
+    if (leg.method === "easeTo") {
+      map.easeTo({
+        ...camera,
+        duration: leg.duration,
+        easing: leg.easing,
+      });
+    } else {
+      map.flyTo({
+        ...camera,
+        duration: leg.duration,
+        curve: leg.curve,
+        speed: leg.speed,
+        easing: leg.easing,
+      });
+    }
+
+    if (index + 1 >= legs.length) {
+      flyTimer.current = window.setTimeout(() => {
+        if (gen === flyGen.current) flying.current = false;
+      }, leg.duration);
+      return;
+    }
+    flyTimer.current = window.setTimeout(() => run(index + 1), leg.duration);
+  };
+
+  run(0);
 }
 
 function addArcLayer(
@@ -396,6 +474,7 @@ function refreshArcs(
   activeIndex: number,
   reducedMotion: boolean,
   arcFrame: { current: number },
+  duration = 1150,
 ) {
   window.cancelAnimationFrame(arcFrame.current);
 
@@ -427,10 +506,10 @@ function refreshArcs(
 
   const points = live;
   const began = performance.now();
-  const duration = 1150;
+  const span = Math.max(720, duration);
 
   const tick = (now: number) => {
-    const t = Math.min(1, (now - began) / duration);
+    const t = Math.min(1, (now - began) / span);
     const count = Math.max(2, Math.floor(t * points.length));
     liveSource.setData(
       featureCollection([lineFeature(points.slice(0, count))]),

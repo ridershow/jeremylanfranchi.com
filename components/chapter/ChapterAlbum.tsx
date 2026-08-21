@@ -43,7 +43,7 @@ export function ChapterAlbum({
             animate={{ y: 0, opacity: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { y: 10, opacity: 0 }}
             transition={enter}
-            className="pointer-events-auto absolute inset-x-2 bottom-2 overflow-hidden border border-white/10 bg-[#07080c]/82"
+            className="pointer-events-auto absolute inset-x-2 bottom-2 max-h-full overflow-hidden border border-white/10 bg-[#07080c]/82"
             aria-label={`Album, ${count} photos`}
           >
             <AlbumHeader count={count} onHide={onToggle} compact />
@@ -96,7 +96,7 @@ export function ChapterAlbum({
           animate={{ x: 0, opacity: 1 }}
           exit={reducedMotion ? { opacity: 0 } : { x: 16, opacity: 0 }}
           transition={enter}
-          className="pointer-events-auto absolute top-[max(4.75rem,calc(env(safe-area-inset-top)+3.25rem))] right-4 bottom-[5.5rem] z-20 flex w-[min(18rem,26vw)] flex-col overflow-hidden border border-white/10 bg-[#07080c]/82 lg:right-8"
+          className="pointer-events-auto absolute inset-y-0 right-4 z-10 flex w-[min(18rem,26vw)] min-h-0 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82 md:right-8 lg:right-10"
           aria-label={`Album, ${count} photos`}
         >
           <AlbumHeader count={count} onHide={onToggle} />
