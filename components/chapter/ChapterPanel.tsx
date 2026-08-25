@@ -156,23 +156,18 @@ export function ChapterPanel({
             </div>
           ) : null}
 
-          {reading ? (
-            <div
-              key={chapter.slug}
-              className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:hidden"
-            >
-              <ReadToggle expanded onClick={onToggleReading} />
-              {renderStory()}
-            </div>
-          ) : null}
-
           {!collapsed ? (
             <motion.div
               key={chapter.slug}
               initial={reducedMotion ? false : { y: 12, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="chapter-panel hidden min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
+              className={`chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:px-5 md:py-5 ${
+                reading ? "md:hidden" : "hidden md:block"
+              }`}
             >
+              {reading ? (
+                <ReadToggle expanded onClick={onToggleReading} />
+              ) : null}
               {renderStory()}
             </motion.div>
           ) : null}
