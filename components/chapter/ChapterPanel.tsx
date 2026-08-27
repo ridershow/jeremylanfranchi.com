@@ -90,10 +90,7 @@ export function ChapterPanel({
         ))}
       </div>
 
-      <ChapterMoments
-        moments={chapter.moments}
-        reducedMotion={reducedMotion}
-      />
+      <ChapterMoments moments={chapter.moments} />
 
       {activeIndex === chapters.length - 1 ? (
         <div className="mt-7 border-t border-white/10 pt-5">
@@ -157,10 +154,7 @@ export function ChapterPanel({
           ) : null}
 
           {!collapsed ? (
-            <motion.div
-              key={chapter.slug}
-              initial={reducedMotion ? false : { y: 12, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
+            <div
               className={`chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:px-5 md:py-5 ${
                 reading ? "md:hidden" : "hidden md:block"
               }`}
@@ -168,8 +162,18 @@ export function ChapterPanel({
               {reading ? (
                 <ReadToggle expanded onClick={onToggleReading} />
               ) : null}
-              {renderStory()}
-            </motion.div>
+              {reducedMotion ? (
+                renderStory()
+              ) : (
+                <motion.div
+                  key={chapter.slug}
+                  initial={{ y: 12, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                >
+                  {renderStory()}
+                </motion.div>
+              )}
+            </div>
           ) : null}
           {controls}
         </div>
@@ -394,10 +398,9 @@ function roleWeight(role: TenureGroup["roles"][number]) {
 
 type ChapterMomentsProps = {
   moments: Moment[];
-  reducedMotion: boolean;
 };
 
-function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
+function ChapterMoments({ moments }: ChapterMomentsProps) {
   if (moments.length === 0) return null;
 
   return (
@@ -406,12 +409,9 @@ function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
         In this place
       </p>
       <ul className="mt-3">
-        {moments.map((moment, index) => (
-          <motion.li
+        {moments.map((moment) => (
+          <li
             key={`${moment.title}-${moment.period ?? ""}`}
-            initial={reducedMotion ? false : { y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: reducedMotion ? 0 : 0.05 * index }}
             className="border-t border-white/10 py-4"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -436,7 +436,7 @@ function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
                 {moment.body}
               </p>
             ) : null}
-          </motion.li>
+          </li>
         ))}
       </ul>
     </div>
