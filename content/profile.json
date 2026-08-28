@@ -5,9 +5,9 @@
   "bio": "I lead field marketing at GitGuardian & shoot pictures, sometimes.",
   "intro": [
     "Invent, design, prototype, industrialize.",
-    "Originally shaped as industrial and mechanical designer applying it for 2 years in the car manufacturing industry, I rapidly took my way off into the urban sport industry. From there I started building for a freestyle scooter brand and a media company. Working from 3D design to manufacturing at large scale to building brand identity through photography alongside team & travel management. These experiences have enlightened my love for marketing which got me into Growth Marketing. It enables me to pursue this willingness to constantly invent, design, prototype, industrialize. But in the tech world now!"
+    "I trained as an industrial and mechanical designer, then spent two years in car manufacturing at Renault. From there I left for urban sport: a freestyle scooter brand and a media company. 3D through manufacturing, photography, team and travel. That work pulled me into growth marketing. Same loop, now in tech: invent, design, prototype, industrialize."
   ],
-  "tagline": "Growth marketer, Photographer, traveler. Join me on my journey.",
+  "tagline": "Growth marketer, photographer, traveler.",
   "location": "Paris, France",
   "portrait": "/brand/profile-image.webp",
   "email": "contact@jeremylanfranchi.com",
@@ -22,7 +22,7 @@
       },
       {
         "title": "Design",
-        "line": "Seats, magazines, pictures — giving a thing its form.",
+        "line": "Seats, magazines, pictures: giving a thing its form.",
         "chapters": ["renault", "french-toast", "freestyle"]
       },
       {
@@ -32,7 +32,7 @@
       },
       {
         "title": "Industrialize",
-        "line": "Growth that scales. Then showing up where the people already are.",
+        "line": "Growth loops that keep running. Then showing up where people already are.",
         "chapters": ["phenix", "studapart", "gitguardian", "gitguardian-field"]
       }
     ],

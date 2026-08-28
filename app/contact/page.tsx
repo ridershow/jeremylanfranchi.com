@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(
   "Contact",
-  "Get in touch with Jérémy Lanfranchi — work, pictures, or just a hello.",
+  "Get in touch with Jérémy Lanfranchi: work, pictures, or just a hello.",
   "/contact",
 );
 

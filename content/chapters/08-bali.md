@@ -18,14 +18,14 @@ moments:
   - title: Le Wagon
     kind: study
     period: 3 months
-    body: Bootcamp in Canggu — Ruby on Rails, the full stack. WordPress was already the freelance living; this was enough to build more than a site.
+    body: Bootcamp in Canggu: Ruby on Rails, the full stack. WordPress was already the freelance living; this was enough to build more than a site.
   - title: Travel pictures
     kind: photo
     period: 2018
     body: Three months in the light. The island stuck. Scuba and underwater photography come later; the pull toward the water starts here.
 photos:
   - src: /photos/bali/bootcamp-hotel.jpg
-    caption: The bootcamp at FRii Echo Beach — laptops on the hotel terrace, Canggu.
+    caption: The bootcamp at FRii Echo Beach: laptops on the hotel terrace, Canggu.
   - src: /photos/bali/underwater.jpg
     caption: The pull toward the water starts here.
 ---

@@ -15,11 +15,11 @@ location:
 moments:
   - title: An anti-waste app
     kind: work
-    period: Nov 2018 — Apr 2019
+    period: Nov 2018–Apr 2019
     href: https://www.wearephenix.com
     body: Stores reselling food near expiry. A competitor to Too Good To Go, and a launch to prepare.
 ---
 
 Growth marketing manager at Phenix, getting an anti-waste app ready to launch.
 
-Same muscle as the design years: invent, prototype, industrialize — applied to acquisition.
+Same muscle as the design years: invent, prototype, industrialize, applied to acquisition.

@@ -16,11 +16,11 @@ location:
 moments:
   - title: Presence into pipeline
     kind: work
-    period: Nov 2025 — Present
+    period: Nov 2025–Present
     href: https://www.gitguardian.com
-    body: Black Hat, DEF CON, RSA — the events, the territories, the conversations. Showing up where security people already are, and turning that into a motion.
+    body: Black Hat, DEF CON, RSA: the events, the territories, the conversations. Showing up where security people already are, and turning that into a motion.
 ---
 
 November 2025. Still GitGuardian. Head of global field marketing.
 
-The events, the territories, the conversations. Not a booth-and-banner job — a presence job. The globe keeps the same Paris pin. The work now leaves it on purpose.
+The events, the territories, the conversations. A presence job, not a booth-and-banner job. The globe keeps the same Paris pin. The work now leaves it on purpose.

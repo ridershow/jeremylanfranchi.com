@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(
   "Skills",
-  "Invent, design, prototype, industrialize — four crafts, with the chapters that prove them.",
+  "Invent, design, prototype, industrialize: four crafts, with the chapters that prove them.",
   "/skills",
 );
 

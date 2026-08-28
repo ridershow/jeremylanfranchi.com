@@ -19,6 +19,6 @@ moments:
     body: Lycée Richelieu, Rueil-Malmaison. Still running next to the sport, before the BTS and the factory floor.
 ---
 
-Lycée Richelieu. Still Rueil, still the same pin — the classroom next to the sport.
+Lycée Richelieu. Still Rueil, still the same pin: the classroom next to the sport.
 
 High school, then a BTS in Puteaux, then the Pacific. The school years sit here so the timeline can show them.

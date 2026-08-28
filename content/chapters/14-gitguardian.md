@@ -15,11 +15,11 @@ location:
 moments:
   - title: Secrets, then conversion
     kind: work
-    period: Sep 2021 — Dec 2022
+    period: Sep 2021–Dec 2022
     href: https://www.gitguardian.com
     body: PLG and CRO for a code-security product used by hundreds of thousands of developers. Same invent-design-prototype-industrialize loop, now in cybersecurity.
 ---
 
-September 21, 2021. Same apartment, new desk. GitGuardian — secrets detection for the DevOps generation.
+September 21, 2021. Same apartment, new desk. GitGuardian: secrets detection for the DevOps generation.
 
-Not a new city. A new title. The first of three at the same company: growth marketing manager, learning how developers actually find, try, and stay.
+Same city, new title. The first of three at the same company: growth marketing manager, learning how developers find, try, and stay.

@@ -25,8 +25,8 @@ const profile = getProfile();
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${profile.name} — Growth marketer & photographer`,
-    template: `%s — ${profile.name}`,
+    default: `${profile.name}: Growth marketer & photographer`,
+    template: `%s · ${profile.name}`,
   },
   description: profile.bio,
   applicationName: profile.name,
@@ -48,12 +48,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: profile.name,
-    title: `${profile.name} — Growth marketer & photographer`,
+    title: `${profile.name}: Growth marketer & photographer`,
     description: profile.bio,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} — Growth marketer & photographer`,
+    title: `${profile.name}: Growth marketer & photographer`,
     description: profile.bio,
   },
   robots: {

@@ -14,8 +14,8 @@ location:
 moments:
   - title: Launch from hometown
     kind: work
-    period: 2014 — 2015
-    body: A third company from the year back in Rueil, alongside Ditched and UrbanArtt — hometown as a studio.
+    period: 2014–2015
+    body: A third company from the year back in Rueil, alongside Ditched and UrbanArtt: hometown as a studio.
 ---
 
 A new one from the year back in Rueil. O Supply Co., launched alongside the two that already existed.
