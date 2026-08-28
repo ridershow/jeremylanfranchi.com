@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { getProfile } from "@/lib/content";
+import { getChapters, getProfile } from "@/lib/content";
 import { Skills } from "@/components/skills/Skills";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(
   "Skills",
-  "Core and other skills — growth marketing, product-led growth, and the tools behind the work.",
+  "Invent, design, prototype, industrialize — four crafts, with the chapters that prove them.",
   "/skills",
 );
 
 export default function SkillsPage() {
   const profile = getProfile();
+  const chapters = getChapters();
 
-  return <Skills profile={profile} />;
+  return <Skills profile={profile} chapters={chapters} />;
 }

@@ -48,7 +48,20 @@ Paragraphs of the story. Separate them with a blank line.
 - Landing copy: `kicker`, `bio`, `portrait`
 - Earth (chapter 0) intro: `intro` — first string is the motto, the rest are body paragraphs
 - Resume: `resumeHref` (file in `public/`, e.g. `public/Resume-Jeremy-Lanfranchi.pdf`). Replace that file with a fresh LinkedIn PDF export anytime.
-- Skills page: `skills.core` and `skills.other`
+- Skills page: `skills.crafts` — each craft has `title`, `line`, and `chapters` (slugs that open `/journey?c=<slug>`). Optional `skills.tools` is a quiet footer, not a second resume.
+
+```json
+"skills": {
+  "crafts": [
+    {
+      "title": "Invent",
+      "line": "Brands and companies that did not exist yet.",
+      "chapters": ["urbanartt", "beng"]
+    }
+  ],
+  "tools": ["Webflow", "n8n"]
+}
+```
 - Name, tagline, social links, and optional `email` for the contact page
 
 ## Tips

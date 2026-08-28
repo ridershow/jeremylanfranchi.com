@@ -76,7 +76,7 @@ function IntroPanelBody({
           href="/skills"
           className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
         >
-          See skills
+          See how I work
           <span aria-hidden="true">→</span>
         </Link>
       </div>
@@ -109,6 +109,18 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     prev,
     reducedMotion,
   } = useJourney(chapters.length, goContact, lightboxIndex !== null);
+  const appliedChapterQuery = useRef(false);
+
+  useEffect(() => {
+    if (appliedChapterQuery.current) return;
+    const slug = new URLSearchParams(window.location.search).get("c");
+    appliedChapterQuery.current = true;
+    if (!slug) return;
+    const nextIndex = chapters.findIndex((entry) => entry.slug === slug);
+    if (nextIndex < 0) return;
+    goTo(nextIndex);
+  }, [chapters, goTo]);
+
   const { phone, wide, short } = useViewport();
   const frameRef = useRef<HTMLDivElement>(null);
   const wellRef = useRef<HTMLDivElement>(null);

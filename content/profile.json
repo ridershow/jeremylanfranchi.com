@@ -14,33 +14,35 @@
   "resumeHref": "/Resume-Jeremy-Lanfranchi.pdf",
   "portfolioHref": "https://portfolio.jeremylanfranchi.com",
   "skills": {
-    "core": [
-      "Search & Social Ads",
-      "Product Led Growth (PLG)",
-      "Inbound Marketing",
-      "Outbound Marketing",
-      "Marketing Automation",
-      "Agentic Engineering",
-      "SEO",
-      "ABM",
-      "Google Spreadsheet",
-      "Google Analytics",
-      "Webflow",
-      "Github",
-      "Figma",
-      "Adobe Lightroom",
-      "Adobe Photoshop"
+    "crafts": [
+      {
+        "title": "Invent",
+        "line": "Brands and companies that did not exist yet.",
+        "chapters": ["urbanartt", "ditched", "o-supply", "beng"]
+      },
+      {
+        "title": "Design",
+        "line": "Seats, magazines, pictures — giving a thing its form.",
+        "chapters": ["renault", "french-toast", "freestyle"]
+      },
+      {
+        "title": "Prototype",
+        "line": "Build it, put it in the world, see if it holds.",
+        "chapters": ["bali", "freelance", "dater"]
+      },
+      {
+        "title": "Industrialize",
+        "line": "Growth that scales. Then showing up where the people already are.",
+        "chapters": ["phenix", "studapart", "gitguardian", "gitguardian-field"]
+      }
     ],
-    "other": [
-      "Copywriting",
-      "Creativity",
-      "Field Marketing",
-      "Snowflake",
-      "customer.io",
+    "tools": [
+      "Webflow",
       "n8n",
-      "Web & Mobile app",
-      "Web Scraping",
-      "Shopify"
+      "Shopify",
+      "Figma",
+      "Lightroom",
+      "GitHub"
     ]
   },
   "socials": [
