@@ -55,7 +55,7 @@ Paragraphs of the story. Separate them with a blank line.
 
 - Paris 18e and Paris 9e are separate chapters so the camera actually moves.
 - Every job and school is its own chapter. Set `title` to the role (or program), `company:` to the org, and `track:` to `education`, `founder`, or `fte`. Same-city chapters reuse the pin — the globe does not fly.
-- Consecutive chapters with the same `company` share a timeline rail, a time-in-org label, and a role ladder. Rails sit on a color lane (blue education, coral founder, gold FTE) and stretch across the real start–end dates, not just a single tick.
+- Consecutive chapters with the same `company` share a timeline rail, a time-in-org label, and a role ladder. Rails sit on a color lane (blue education, violet founder, gold FTE) and stretch across the real start–end dates, not just a single tick. Coral is reserved for play, the live pin, and the playhead.
 - Photography trips you have not lived in can be `kind: travel`.
 - `dateLabel` is useful when a date is approximate (Bali, childhood).
 - Leave `photos:` out if you only drop files in the folder. They still appear in the destination album.

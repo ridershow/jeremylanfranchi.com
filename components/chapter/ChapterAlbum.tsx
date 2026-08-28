@@ -43,7 +43,7 @@ export function ChapterAlbum({
             animate={{ y: 0, opacity: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { y: 10, opacity: 0 }}
             transition={enter}
-            className="pointer-events-auto absolute inset-x-2 bottom-2 max-h-full overflow-hidden border border-white/10 bg-[#07080c]/82"
+            className="pointer-events-auto absolute inset-x-2 bottom-2 max-h-full overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90"
             aria-label={`Album, ${count} photos`}
           >
             <AlbumHeader count={count} onHide={onToggle} compact />
@@ -75,7 +75,7 @@ export function ChapterAlbum({
             exit={{ opacity: 0 }}
             transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
             onClick={onToggle}
-            className="pointer-events-auto absolute right-2 bottom-2 border border-white/10 bg-[#07080c]/82 px-3 py-2 text-[11px] tracking-[0.18em] text-white/70 uppercase transition hover:text-[var(--coral)]"
+            className="pointer-events-auto absolute right-2 bottom-2 border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 px-3 py-2 text-xs tracking-[0.18em] text-white/70 uppercase transition hover:text-[var(--coral)]"
             aria-expanded={false}
             aria-label={`Show album, ${count} photos`}
           >
@@ -96,7 +96,7 @@ export function ChapterAlbum({
           animate={{ x: 0, opacity: 1 }}
           exit={reducedMotion ? { opacity: 0 } : { x: 16, opacity: 0 }}
           transition={enter}
-          className="pointer-events-auto absolute inset-y-0 right-4 z-10 flex w-[min(18rem,26vw)] min-h-0 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82 md:right-8 lg:right-10"
+          className="pointer-events-auto absolute inset-y-0 right-4 z-10 flex w-[min(18rem,26vw)] min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 md:right-8 lg:right-10"
           aria-label={`Album, ${count} photos`}
         >
           <AlbumHeader count={count} onHide={onToggle} />
@@ -127,7 +127,7 @@ export function ChapterAlbum({
                   />
                 </button>
                 {photo.caption ? (
-                  <figcaption className="mt-1.5 text-[11px] tracking-wide text-white/40">
+                  <figcaption className="mt-1.5 text-[13px] tracking-wide text-[var(--text-muted)]">
                     {photo.caption}
                   </figcaption>
                 ) : null}
@@ -144,7 +144,7 @@ export function ChapterAlbum({
           exit={{ opacity: 0 }}
           transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
           onClick={onToggle}
-          className="pointer-events-auto absolute top-1/2 right-0 z-20 -translate-y-1/2 border border-r-0 border-white/10 bg-[#07080c]/82 px-2.5 py-3 text-[11px] tracking-[0.18em] text-white/70 uppercase transition hover:text-[var(--coral)]"
+          className="pointer-events-auto absolute top-1/2 right-0 z-20 -translate-y-1/2 border border-r-0 border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 px-2.5 py-3 text-xs tracking-[0.18em] text-white/70 uppercase transition hover:text-[var(--coral)]"
           aria-expanded={false}
           aria-label={`Show album, ${count} photos`}
         >
@@ -170,13 +170,13 @@ function AlbumHeader({
         compact ? "px-2 py-1.5" : "px-3 py-2.5"
       }`}
     >
-      <p className="text-[11px] tracking-[0.18em] text-white/50 uppercase">
+      <p className="text-xs tracking-[0.18em] text-[var(--text-muted)] uppercase">
         Album · {count}
       </p>
       <button
         type="button"
         onClick={onHide}
-        className="text-[11px] tracking-[0.16em] text-white/55 uppercase transition hover:text-[var(--coral)]"
+        className="text-xs tracking-[0.16em] text-[var(--text-muted)] uppercase transition hover:text-[var(--coral)]"
         aria-expanded
         aria-label="Hide album"
       >

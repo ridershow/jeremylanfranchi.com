@@ -24,8 +24,6 @@ type ChapterPanelProps = {
   onPrev: () => void;
   onNext: () => void;
   onTogglePlay: () => void;
-  onStart: () => void;
-  onEnd: () => void;
   onToggleReading?: () => void;
 };
 
@@ -43,8 +41,6 @@ export function ChapterPanel({
   onPrev,
   onNext,
   onTogglePlay,
-  onStart,
-  onEnd,
   onToggleReading,
 }: ChapterPanelProps) {
   const paragraphs = chapter.body.split(/\n\n+/).filter(Boolean);
@@ -56,63 +52,52 @@ export function ChapterPanel({
   );
   const meta = [range, chapter.location.name].filter(Boolean);
   const tenure = tenureFor(chapters, activeIndex);
-
-  const controls = (
-    <ChapterControls
-      attached={!collapsed}
-      playing={playing}
-      started
-      activeIndex={activeIndex}
-      chapterCount={chapters.length}
-      onPrev={onPrev}
-      onNext={onNext}
-      onTogglePlay={onTogglePlay}
-      onStart={onStart}
-      onEnd={onEnd}
-    />
-  );
-
   const side = layoutMode === "side";
+  const teaser = !reading;
 
-  const renderStory = () => (
+  const story = (
     <>
       {tenure ? (
-        <TenureTrack
-          tenure={tenure}
-          activeIndex={activeIndex}
-          onGoTo={onGoTo}
-        />
+        <div className="story-extra">
+          <TenureTrack
+            tenure={tenure}
+            activeIndex={activeIndex}
+            onGoTo={onGoTo}
+          />
+        </div>
       ) : null}
 
-      <div className="max-w-[65ch] space-y-4 text-sm leading-[1.7] text-white/82 md:text-base md:leading-[1.65] md:text-white/78">
+      <div className="story-body max-w-[65ch] space-y-4 text-base leading-[1.65] text-white/82">
         {paragraphs.map((paragraph) => (
           <p key={paragraph.slice(0, 24)}>{paragraph}</p>
         ))}
       </div>
 
-      <ChapterMoments
-        moments={chapter.moments}
-        reducedMotion={reducedMotion}
-      />
+      <div className="story-extra">
+        <ChapterMoments
+          moments={chapter.moments}
+          reducedMotion={reducedMotion}
+        />
 
-      {activeIndex === chapters.length - 1 ? (
-        <div className="mt-7 border-t border-white/10 pt-5">
-          <p className="text-[11px] tracking-[0.2em] text-[var(--coral)] uppercase">
-            End of the road
-          </p>
-          <p className="mt-2 text-base leading-[1.65] text-white/78">
-            That&apos;s the story so far. If you want to work together,
-            talk pictures, or just say hi —
-          </p>
-          <Link
-            href="/contact"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
-          >
-            Say hello
-            <span aria-hidden="true">→</span>
-          </Link>
-        </div>
-      ) : null}
+        {activeIndex === chapters.length - 1 ? (
+          <div className="mt-7 border-t border-[var(--border-subtle)] pt-5">
+            <p className="text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase">
+              End of the road
+            </p>
+            <p className="mt-2 text-base leading-[1.65] text-white/78">
+              That&apos;s the story so far. If you want to work together,
+              talk pictures, or just say hi —
+            </p>
+            <Link
+              href="/contact"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
+            >
+              Say hello
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        ) : null}
+      </div>
     </>
   );
 
@@ -122,18 +107,16 @@ export function ChapterPanel({
         side
           ? "flex-1"
           : reading
-            ? "mt-3 flex-1 md:mt-5"
-            : "mt-3 md:mt-5 md:flex-1"
+            ? "mt-6 flex-1 md:mt-8"
+            : "mt-6 md:mt-8 md:flex-1"
       }`}
     >
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {!collapsed ? (
           <p
-            className={`shrink-0 text-[11px] tracking-[0.18em] text-white/50 uppercase ${
-              reading
-                ? "line-clamp-2 md:hidden"
-                : `hidden md:block ${side ? "md:text-right" : ""}`
-            }`}
+            className={`shrink-0 text-[13px] text-[var(--text-muted)] ${
+              reading ? "line-clamp-2" : ""
+            } ${side ? "md:text-right" : ""}`}
           >
             {meta.join(" · ")}
           </p>
@@ -141,42 +124,44 @@ export function ChapterPanel({
 
         <div
           ref={panelRef}
-          className={`mt-3 flex min-h-0 flex-col overflow-hidden border border-white/10 md:mt-4 ${
-            reading
-              ? "flex-1 bg-[#07080c]/58 md:bg-[#07080c]/82"
-              : "bg-[#07080c]/72 md:flex-1 md:bg-[#07080c]/82"
+          className={`mt-4 flex min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 ${
+            reading ? "flex-1" : "md:flex-1"
           }`}
         >
-          {!collapsed && !reading ? (
-            <div className="px-4 py-3 md:hidden">
-              <p className="line-clamp-3 text-sm leading-[1.65] text-white/78">
-                {paragraphs[0]}
-              </p>
-              <ReadToggle expanded={false} onClick={onToggleReading} />
-            </div>
-          ) : null}
-
-          {reading ? (
+          {!collapsed ? (
             <div
               key={chapter.slug}
-              className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:hidden"
+              className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 md:flex-1 md:px-5 md:py-5 ${
+                reading ? "flex-1" : ""
+              } ${
+                teaser
+                  ? "max-md:[&_.story-extra]:hidden max-md:[&_.story-body>p:not(:first-child)]:hidden max-md:[&_.story-body>p:first-child]:line-clamp-3"
+                  : "flex-1"
+              }`}
             >
-              <ReadToggle expanded onClick={onToggleReading} />
-              {renderStory()}
+              {reading ? (
+                <ReadToggle expanded onClick={onToggleReading} />
+              ) : null}
+              {story}
+              {teaser ? (
+                <ReadToggle
+                  expanded={false}
+                  onClick={onToggleReading}
+                  className="md:hidden"
+                />
+              ) : null}
             </div>
           ) : null}
-
-          {!collapsed ? (
-            <motion.div
-              key={chapter.slug}
-              initial={reducedMotion ? false : { y: 12, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="chapter-panel hidden min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:block md:px-5 md:py-5"
-            >
-              {renderStory()}
-            </motion.div>
-          ) : null}
-          {controls}
+          <ChapterControls
+            attached={!collapsed}
+            playing={playing}
+            started
+            activeIndex={activeIndex}
+            chapterCount={chapters.length}
+            onPrev={onPrev}
+            onNext={onNext}
+            onTogglePlay={onTogglePlay}
+          />
         </div>
       </div>
     </div>
@@ -186,9 +171,11 @@ export function ChapterPanel({
 export function ReadToggle({
   expanded,
   onClick,
+  className = "",
 }: {
   expanded: boolean;
   onClick?: () => void;
+  className?: string;
 }) {
   if (!onClick) return null;
 
@@ -199,9 +186,9 @@ export function ReadToggle({
       aria-expanded={expanded}
       className={`inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)] ${
         expanded ? "mb-4" : "mt-3"
-      }`}
+      } ${className}`}
     >
-      {expanded ? "Fermer" : "Lire plus"}
+      {expanded ? "Close" : "Read more"}
       <span aria-hidden="true">{expanded ? "×" : "→"}</span>
     </button>
   );
@@ -226,7 +213,7 @@ function CompanyName({
         href={tenure.href}
         target="_blank"
         rel="noreferrer"
-        className="text-[11px] tracking-[0.2em] uppercase underline underline-offset-4"
+        className="text-xs tracking-[0.2em] uppercase underline underline-offset-4"
         style={{ color, textDecorationColor: color }}
       >
         {tenure.company}
@@ -236,7 +223,7 @@ function CompanyName({
 
   return (
     <p
-      className="text-[11px] tracking-[0.2em] uppercase"
+      className="text-xs tracking-[0.2em] uppercase"
       style={{ color }}
     >
       {tenure.company}
@@ -308,12 +295,12 @@ function TenureTrack({ tenure, activeIndex, onGoTo }: TenureTrackProps) {
           ) : null}
           <CompanyName tenure={tenure} color={theme.color} />
         </div>
-        <p className="shrink-0 text-[11px] tracking-[0.16em] text-white/40 uppercase">
+        <p className="shrink-0 text-xs tracking-[0.16em] text-[var(--text-muted)] uppercase">
           {theme.label} · {duration}
         </p>
       </div>
       {ladder ? (
-        <p className="mt-1 text-[11px] tracking-[0.16em] text-white/35 uppercase">
+        <p className="mt-1 text-xs tracking-[0.16em] text-[var(--text-muted)] uppercase">
           Role {step} of {tenure.roles.length}
         </p>
       ) : null}
@@ -362,7 +349,7 @@ function TenureTrack({ tenure, activeIndex, onGoTo }: TenureTrackProps) {
                   >
                     {role.chapter.title}
                   </span>
-                  <span className="mt-0.5 block text-[11px] tracking-wide text-white/35 uppercase">
+                  <span className="mt-0.5 block text-[13px] text-[var(--text-muted)]">
                     {range}
                   </span>
                 </button>
@@ -375,7 +362,7 @@ function TenureTrack({ tenure, activeIndex, onGoTo }: TenureTrackProps) {
           {repeatTitle ? (
             <p className="text-sm font-medium text-white">{first.chapter.title}</p>
           ) : null}
-          <p className={`text-[11px] tracking-wide text-white/35 uppercase ${repeatTitle ? "mt-0.5" : ""}`}>
+          <p className={`text-[13px] text-[var(--text-muted)] ${repeatTitle ? "mt-0.5" : ""}`}>
             {formatRange(
               first.chapter.start,
               first.chapter.end,
@@ -407,7 +394,7 @@ function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
 
   return (
     <div className="mt-7">
-      <p className="text-[11px] tracking-[0.2em] text-white/35 uppercase">
+      <p className="text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase">
         In this place
       </p>
       <ul className="mt-3">
@@ -417,7 +404,7 @@ function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
             initial={reducedMotion ? false : { y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: reducedMotion ? 0 : 0.05 * index }}
-            className="border-t border-white/10 py-4"
+            className="border-t border-[var(--border-subtle)] py-4"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               {moment.href ? (
@@ -432,12 +419,12 @@ function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
               ) : (
                 <span className="font-medium text-white">{moment.title}</span>
               )}
-              <span className="text-[11px] tracking-wide text-white/35 uppercase">
+              <span className="text-[13px] text-[var(--text-muted)]">
                 {[moment.kind, moment.period].filter(Boolean).join(" · ")}
               </span>
             </div>
             {moment.body ? (
-              <p className="mt-2 text-sm leading-6 text-white/55">
+              <p className="mt-2 text-base leading-6 text-white/70">
                 {moment.body}
               </p>
             ) : null}
