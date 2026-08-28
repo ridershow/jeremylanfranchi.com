@@ -57,7 +57,7 @@ export function PhotoLightbox({
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#07080c]/92 px-4 py-8"
+      className="absolute inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#07080c]/92 px-4 py-8"
       onClick={onClose}
     >
       <button
@@ -104,7 +104,7 @@ export function PhotoLightbox({
         <img
           src={photo.src}
           alt={label}
-          className="min-h-0 max-h-[min(78dvh,calc(100dvh-10rem))] max-w-full object-contain"
+          className="min-h-0 max-h-[min(78svh,calc(var(--app-height,100svh)-10rem))] max-w-full object-contain"
         />
         {photo.caption ? (
           <figcaption className="mt-3 max-w-[65ch] shrink-0 text-center text-[11px] tracking-wide text-white/55">

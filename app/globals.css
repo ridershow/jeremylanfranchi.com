@@ -15,6 +15,16 @@
   --track-founder: 16px;
   --track-fte: 26px;
   --track-sublane: 5px;
+  --app-top: 0px;
+  --app-height: 100svh;
+}
+
+.app-frame {
+  position: fixed;
+  top: var(--app-top, 0px);
+  left: 0;
+  width: 100%;
+  height: var(--app-height, 100svh);
 }
 
 @media (min-width: 768px) {

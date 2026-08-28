@@ -21,6 +21,7 @@ import { Timeline } from "@/components/timeline/Timeline";
 import { useJourney } from "@/hooks/useJourney";
 import { useContentLayout } from "@/hooks/useContentLayout";
 import { useViewport } from "@/hooks/useMedia";
+import { useVisualViewport } from "@/hooks/useVisualViewport";
 import {
   flyPadding,
   isSamePin,
@@ -121,6 +122,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     goTo(nextIndex);
   }, [chapters, goTo]);
 
+  useVisualViewport();
   const { phone, wide, short } = useViewport();
   const frameRef = useRef<HTMLDivElement>(null);
   const wellRef = useRef<HTMLDivElement>(null);
@@ -305,7 +307,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   return (
     <div
       ref={frameRef}
-      className="relative h-dvh w-full overflow-hidden bg-[#07080c] text-white"
+      className="app-frame overflow-hidden bg-[#07080c] text-white"
       style={{ "--map-chrome-bottom": `${attribBottom}px` } as CSSProperties}
     >
       <div className="absolute inset-0">
@@ -342,7 +344,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               ? "h-0 shrink-0 overflow-hidden md:hidden"
               : short
                 ? "relative min-h-0 flex-1 overflow-hidden md:hidden"
-                : "relative min-h-[42dvh] flex-1 overflow-hidden md:hidden"
+                : "relative min-h-[42%] flex-1 overflow-hidden md:hidden"
           }
         >
           {phone && albumChrome && chapter ? (
