@@ -13,6 +13,7 @@ import {
   COMPACT_MAX,
   flightDuration,
   flightLegs,
+  flyAnimation,
   flyPadding,
   greatCircle,
   isCompactViewport,
@@ -268,13 +269,20 @@ export default function GlobeCanvas({
         return;
       }
 
-      const legs = flightLegs(
-        origin,
-        destination,
-        distance,
-        fromOrbit,
-        isCompactViewport(),
-      );
+      if (!isCompactViewport()) {
+        flyGen.current += 1;
+        window.clearTimeout(flyTimer.current);
+        flying.current = false;
+        refreshArcs(map, chapters, activeIndex, false, arcFrame, 1150);
+        map.flyTo({
+          ...destination,
+          padding,
+          ...flyAnimation(distance, fromOrbit),
+        });
+        return;
+      }
+
+      const legs = flightLegs(origin, destination, distance, fromOrbit, true);
       refreshArcs(
         map,
         chapters,

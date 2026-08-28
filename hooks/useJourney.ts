@@ -77,7 +77,7 @@ export function useJourney(
   useEffect(() => {
     if (!playing) return;
     const phone = window.innerWidth < MD_MIN;
-    const dwell = reducedMotion ? 3500 : phone ? 8200 : 6200;
+    const dwell = reducedMotion ? 3500 : phone ? 9000 : 6200;
     const id = window.setTimeout(() => {
       setIndex((current) => {
         if (current >= chapterCount - 1) {

@@ -143,7 +143,7 @@ export type FlightLeg = {
   easing: (t: number) => number;
 };
 
-/** Pull up until Earth fills the frame, then dive into the chapter. */
+/** Pull up until Earth fills the frame, then cruise and dive into the chapter. */
 function earthPeakView(from: GeoPoint, destination: CameraView, distance: number): CameraView {
   let zoom = 3.05;
   let pitch = 26;
@@ -197,20 +197,32 @@ export function flightLegs(
     ];
   }
 
-  const ascent = 1700 + Math.min(500, distance * 3);
-  const descent = 2800 + Math.min(1600, distance * 10);
+  const peak = earthPeakView(from, destination, distance);
+  const cruise: CameraView = {
+    ...peak,
+    center: destination.center,
+  };
+  const lift = 1100 + Math.min(400, distance * 2);
+  const travel = 1600 + Math.min(1400, distance * 12);
+  const land = 2000 + Math.min(900, distance * 6);
 
   return [
     {
-      view: earthPeakView(from, destination, distance),
+      view: peak,
       method: "easeTo",
-      duration: ascent,
+      duration: lift,
+      easing: easeInOutCubic,
+    },
+    {
+      view: cruise,
+      method: "easeTo",
+      duration: travel,
       easing: easeInOutCubic,
     },
     {
       view: destination,
       method: "flyTo",
-      duration: descent,
+      duration: land,
       curve: 1.08,
       speed: 0.38,
       easing: easeOut(2.55),
