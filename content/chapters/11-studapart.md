@@ -15,11 +15,11 @@ location:
 moments:
   - title: Rooms near school
     kind: work
-    period: Apr 2019 — Sep 2019
+    period: Apr 2019–Sep 2019
     href: https://www.studapart.com
     body: A Paris startup helping students find a place near school, including overseas students looking for mid to long-term rent.
 ---
 
-Studapart — student housing, schools, people arriving in France who needed a room.
+Studapart: student housing, schools, people arriving in France who needed a room.
 
 Growth again. Then I quit, to build the agency I kept briefing other people to run.

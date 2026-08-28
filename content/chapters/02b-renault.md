@@ -17,7 +17,7 @@ moments:
   - title: Car manufacturing
     kind: work
     period: Two years
-    body: Invent, design, prototype — the factory version of the same loop, while the BTS ran in Puteaux.
+    body: "Invent, design, prototype: the factory version of the same loop, while the BTS ran in Puteaux."
 ---
 
 Two years in car manufacturing, next to the BTS. Renault, while the hometown years were still running.

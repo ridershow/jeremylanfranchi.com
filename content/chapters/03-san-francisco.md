@@ -15,10 +15,10 @@ location:
 moments:
   - title: EF San Francisco
     kind: study
-    period: Sep 2011 — Aug 2013
+    period: Sep 2011–Aug 2013
     body: Education First. Marketing studies, a city on hills, and the first time home was an ocean away.
 ---
 
-September 2011. I flew out to EF San Francisco for marketing studies, English and discover the cali life. The design brain is still there. The photographer is getting louder.
+September 2011. I flew to EF San Francisco for marketing studies, English, and California. The design brain is still there. The photographer is getting louder.
 
 This is also where two things leave the notebook: Ditched.dk and UrbanArtt. A media and a brand, launched from here, meant to travel. Same year, a paid gig: webmaster at Freestyle Scooter News, the French and English reference blog for the scene. 

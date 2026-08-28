@@ -21,11 +21,11 @@ export const TRACKS: Record<
   },
   founder: {
     label: "Founder",
-    color: "#e85d4c",
-    fill: "rgba(232, 93, 76, 0.28)",
-    fillActive: "rgba(232, 93, 76, 0.48)",
-    fillPast: "#f3b4ab",
-    fillMuted: "rgba(232, 93, 76, 0.16)",
+    color: "#9b8ec4",
+    fill: "rgba(155, 142, 196, 0.30)",
+    fillActive: "rgba(155, 142, 196, 0.55)",
+    fillPast: "#c9c0e0",
+    fillMuted: "rgba(155, 142, 196, 0.16)",
   },
   fte: {
     label: "FTE",

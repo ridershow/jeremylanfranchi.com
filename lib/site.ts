@@ -13,6 +13,10 @@ export const ROUTES = [
   { path: "/contact", changeFrequency: "yearly" as const, priority: 0.6 },
 ];
 
+export function journeyChapterHref(slug: string): string {
+  return `/journey?c=${encodeURIComponent(slug)}`;
+}
+
 export function absoluteUrl(path = "/"): string {
   if (path.startsWith("http")) return path;
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
@@ -65,7 +69,10 @@ export function graphJsonLd(profile: Profile, chapters: Chapter[]) {
           addressCountry: "FR",
         },
         sameAs: profile.socials.map((social) => social.href),
-        knowsAbout: [...profile.skills.core, ...profile.skills.other],
+        knowsAbout: [
+          ...profile.skills.crafts.map((craft) => craft.title),
+          ...(profile.skills.tools ?? []),
+        ],
         worksFor: currentWork?.company
           ? {
               "@type": "Organization",

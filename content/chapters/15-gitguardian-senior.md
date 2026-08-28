@@ -15,11 +15,11 @@ location:
 moments:
   - title: USA and EMEA
     kind: work
-    period: Jan 2023 — Oct 2025
+    period: Jan 2023–Oct 2025
     href: https://www.gitguardian.com
-    body: Product-led programs and CRO across two markets. The field work starts here — OWASP, CNCF, the rooms where developers and AppSec already gather.
+    body: "Product-led programs and CRO across two markets. The field work starts here: OWASP, CNCF, the rooms where developers and AppSec already gather."
 ---
 
-Same company, wider brief. Senior growth marketing manager — USA and EMEA, still from the 9th.
+Same company, wider brief. Senior growth marketing manager: USA and EMEA, still from the 9th.
 
 The product-led work stays. What changes is the map: associations, communities, showing up where the people we write for already are. The next title is still GitGuardian.

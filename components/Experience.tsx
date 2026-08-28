@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -49,54 +50,44 @@ function IntroPanelBody({
   onToggleReading?: () => void;
 }) {
   const [motto, ...rest] = profile.intro;
+  const teaser = !reading;
 
   return (
-    <>
-      {!reading ? (
-        <div className="px-4 py-3 md:hidden">
-          {motto ? (
-            <p className="text-sm leading-[1.65] text-[var(--coral)]">{motto}</p>
-          ) : null}
-          {rest[0] ? (
-            <p className="mt-2 line-clamp-3 text-sm leading-[1.65] text-white/78">
-              {rest[0]}
-            </p>
-          ) : null}
-          <ReadToggle expanded={false} onClick={onToggleReading} />
-        </div>
-      ) : null}
-      <div
-        className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 text-sm leading-[1.7] text-white/82 md:px-5 md:py-5 md:text-base md:leading-[1.65] md:text-white/78 ${
-          reading ? "flex-1" : "hidden flex-1 md:block"
-        }`}
-      >
-        {reading ? <ReadToggle expanded onClick={onToggleReading} /> : null}
-        {profile.intro.map((paragraph, introIndex) => (
-          <p
-            key={paragraph.slice(0, 24)}
-            className={introIndex === 0 ? "text-[var(--coral)]" : "mt-4"}
-          >
+    <div
+      className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 text-base leading-[1.65] text-white/82 md:flex-1 md:px-5 md:py-5 ${
+        reading ? "flex-1" : ""
+      } ${
+        teaser
+          ? "max-md:[&_.intro-rest>p:not(:first-child)]:hidden max-md:[&_.intro-rest>p:first-child]:line-clamp-3 max-md:[&_.intro-more]:hidden"
+          : "flex-1"
+      }`}
+    >
+      {reading ? <ReadToggle expanded onClick={onToggleReading} /> : null}
+      {motto ? <p>{motto}</p> : null}
+      <div className="intro-rest">
+        {rest.map((paragraph) => (
+          <p key={paragraph.slice(0, 24)} className="mt-4">
             {paragraph}
           </p>
         ))}
-        <p className="mt-4 hidden text-white/60 md:block">
-          Drag the globe, tap a pin, or step through chapters with A and D or
-          keyboard arrows.
-        </p>
-        <p className="mt-4 text-white/60 md:hidden">
-          Drag the globe, tap a pin, or step with the controls.
-        </p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-          <Link
-            href="/skills"
-            className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
-          >
-            See skills
-            <span aria-hidden="true">→</span>
-          </Link>
-        </div>
       </div>
-    </>
+      <div className="intro-more mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <Link
+          href="/skills"
+          className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
+        >
+          See how I work
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+      {teaser ? (
+        <ReadToggle
+          expanded={false}
+          onClick={onToggleReading}
+          className="md:hidden"
+        />
+      ) : null}
+    </div>
   );
 }
 
@@ -116,11 +107,21 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     goTo,
     next,
     prev,
-    goStart,
-    goEnd,
     reducedMotion,
   } = useJourney(chapters.length, goContact, lightboxIndex !== null);
-  const { phone } = useViewport();
+  const appliedChapterQuery = useRef(false);
+
+  useEffect(() => {
+    if (appliedChapterQuery.current) return;
+    const slug = new URLSearchParams(window.location.search).get("c");
+    appliedChapterQuery.current = true;
+    if (!slug) return;
+    const nextIndex = chapters.findIndex((entry) => entry.slug === slug);
+    if (nextIndex < 0) return;
+    goTo(nextIndex);
+  }, [chapters, goTo]);
+
+  const { phone, wide, short } = useViewport();
   const frameRef = useRef<HTMLDivElement>(null);
   const wellRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -136,8 +137,8 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const collapsed = playing;
   const textFirst = phone && reading && !playing;
   const hasPhotos = Boolean(started && chapter && chapter.photos.length > 0);
-  const albumChrome = hasPhotos && !collapsed && !textFirst;
-  const albumVisible = albumChrome && albumOpen;
+  const albumChrome = hasPhotos && !collapsed && !textFirst && !short;
+  const albumVisible = albumChrome && albumOpen && (phone || wide);
   const photoCount = chapter?.photos.length ?? 0;
   const measuredLayout = useContentLayout({
     enabled: !phone && !collapsed,
@@ -280,6 +281,27 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   );
   const attribBottom = phone && mapPadding ? mapPadding.bottom + 8 : 96;
 
+  const panelShell = (body: ReactNode) => (
+    <div
+      ref={panelRef}
+      className={`pointer-events-auto mt-6 flex min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 md:mt-8 ${
+        textFirst ? "flex-1" : "md:flex-1"
+      }`}
+    >
+      {body}
+      <ChapterControls
+        attached
+        playing={playing}
+        started={started}
+        activeIndex={index}
+        chapterCount={chapters.length}
+        onPrev={prev}
+        onNext={next}
+        onTogglePlay={togglePlay}
+      />
+    </div>
+  );
+
   return (
     <div
       ref={frameRef}
@@ -297,12 +319,14 @@ export function Experience({ chapters, profile }: ExperienceProps) {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(7,8,12,0.92)_0%,rgba(7,8,12,0.78)_28%,rgba(7,8,12,0.42)_38.2%,rgba(7,8,12,0.12)_52%,transparent_68%)] md:block" />
+      <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(180deg,rgba(7,8,12,0.42)_0%,transparent_22%)] md:block" />
       <div
         className={`pointer-events-none absolute inset-0 md:hidden ${
           textFirst
-            ? "bg-[linear-gradient(180deg,rgba(7,8,12,0.42)_0%,rgba(7,8,12,0.18)_22%,rgba(7,8,12,0.28)_48%,rgba(7,8,12,0.62)_100%)]"
-            : "bg-[linear-gradient(180deg,rgba(7,8,12,0.55)_0%,rgba(7,8,12,0.12)_18%,transparent_32%,rgba(7,8,12,0.35)_58%,rgba(7,8,12,0.92)_78%,rgba(7,8,12,0.97)_100%)]"
+            ? "bg-[linear-gradient(180deg,rgba(7,8,12,0.28)_0%,rgba(7,8,12,0.12)_20%,rgba(7,8,12,0.45)_100%)]"
+            : collapsed
+              ? "bg-[linear-gradient(180deg,rgba(7,8,12,0.32)_0%,transparent_20%,transparent_58%,rgba(7,8,12,0.55)_100%)]"
+              : "bg-[linear-gradient(180deg,rgba(7,8,12,0.38)_0%,transparent_18%,transparent_42%,rgba(7,8,12,0.45)_72%,rgba(7,8,12,0.82)_100%)]"
         }`}
       />
 
@@ -316,7 +340,9 @@ export function Experience({ chapters, profile }: ExperienceProps) {
           className={
             textFirst
               ? "h-0 shrink-0 overflow-hidden md:hidden"
-              : "relative min-h-[160px] flex-1 overflow-hidden md:hidden"
+              : short
+                ? "relative min-h-0 flex-1 overflow-hidden md:hidden"
+                : "relative min-h-[42dvh] flex-1 overflow-hidden md:hidden"
           }
         >
           {phone && albumChrome && chapter ? (
@@ -358,7 +384,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                   key={started ? `${chapter.slug}-kicker` : "orbit-kicker"}
                   initial={reducedMotion ? false : { y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  className="text-[11px] tracking-[0.22em] text-white/55 uppercase"
+                  className="text-xs tracking-[0.22em] text-[var(--text-muted)] uppercase"
                 >
                   {started
                     ? chapter.kicker || chapter.location.name
@@ -367,27 +393,18 @@ export function Experience({ chapters, profile }: ExperienceProps) {
               ) : null}
 
               {relocating ? (
-                <div className="mt-2 md:mt-5">
-                  <p className="text-[11px] tracking-[0.2em] text-[var(--coral)] uppercase">
-                    Now flying
-                  </p>
-                  <p className="mt-1 text-base text-white md:text-lg">
-                    {chapter.location.name}
-                  </p>
-                </div>
+                <p className="mt-2 text-xs tracking-[0.2em] text-[var(--coral)] uppercase md:mt-5">
+                  Now flying · {chapter.location.name}
+                </p>
               ) : playing ? (
-                <div className="mt-2 md:mt-5">
-                  <p className="text-[11px] tracking-[0.2em] text-[var(--coral)] uppercase">
-                    {sameCompanyMove
-                      ? "Same pin · new title"
-                      : chapter.company
-                        ? "Same pin · new brief"
-                        : "Same pin"}
-                  </p>
-                  <p className="mt-1 text-base text-white md:text-lg">
-                    {chapter.company ?? chapter.location.name}
-                  </p>
-                </div>
+                <p className="mt-2 text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase md:mt-5">
+                  {sameCompanyMove
+                    ? "Same pin · new title"
+                    : chapter.company
+                      ? "Same pin · new brief"
+                      : "Same pin"}
+                  {chapter.company ? ` · ${chapter.company}` : ""}
+                </p>
               ) : null}
             </div>
 
@@ -401,13 +418,17 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                   ? { duration: 0.2 }
                   : { type: "spring", stiffness: 260, damping: 24 }
               }
-              className={`font-display mt-1 shrink-0 leading-[0.9] font-semibold tracking-tight text-balance md:mt-3 ${
-                compactTitle
-                  ? "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(1.8rem,4vw,3.25rem)]"
-                  : "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(2.4rem,5.4vw,4.75rem)]"
-              } ${chapter.company ? "max-w-[16ch]" : "max-w-[12ch]"}`}
+              className={
+                started
+                  ? `font-display mt-1 shrink-0 leading-[0.9] font-semibold tracking-tight text-balance md:mt-3 ${
+                      compactTitle
+                        ? "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(1.8rem,4vw,3.25rem)]"
+                        : "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(2.4rem,5.4vw,4.75rem)]"
+                    } ${chapter.company ? "max-w-[16ch]" : "max-w-[12ch]"}`
+                  : "sr-only"
+              }
             >
-              {started ? chapter.title : "Earth"}
+              {started ? chapter.title : "Journey"}
             </motion.h1>
 
             {started && !sidePanel ? (
@@ -425,13 +446,11 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 onPrev={prev}
                 onNext={next}
                 onTogglePlay={togglePlay}
-                onStart={goStart}
-                onEnd={goEnd}
                 onToggleReading={toggleReading}
               />
             ) : !started ? (
               collapsed ? (
-                <div className="pointer-events-auto mt-3 overflow-hidden border border-white/10 bg-[#07080c]/82">
+                <div className="pointer-events-auto mt-6 overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90">
                   <ChapterControls
                     attached={false}
                     playing={playing}
@@ -441,37 +460,16 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                     onPrev={prev}
                     onNext={next}
                     onTogglePlay={togglePlay}
-                    onStart={goStart}
-                    onEnd={goEnd}
                   />
                 </div>
               ) : !sidePanel ? (
-                <div
-                  ref={panelRef}
-                  className={`pointer-events-auto mt-3 flex min-h-0 flex-col overflow-hidden border border-white/10 md:mt-5 ${
-                    textFirst
-                      ? "flex-1 bg-[#07080c]/58"
-                      : "bg-[#07080c]/72 md:flex-1 md:bg-[#07080c]/82"
-                  }`}
-                >
+                panelShell(
                   <IntroPanelBody
                     profile={profile}
                     reading={reading}
                     onToggleReading={toggleReading}
-                  />
-                  <ChapterControls
-                    attached
-                    playing={playing}
-                    started={started}
-                    activeIndex={index}
-                    chapterCount={chapters.length}
-                    onPrev={prev}
-                    onNext={next}
-                    onTogglePlay={togglePlay}
-                    onStart={goStart}
-                    onEnd={goEnd}
-                  />
-                </div>
+                  />,
+                )
               ) : null
             ) : null}
           </div>
@@ -492,31 +490,12 @@ export function Experience({ chapters, profile }: ExperienceProps) {
                 onPrev={prev}
                 onNext={next}
                 onTogglePlay={togglePlay}
-                onStart={goStart}
-                onEnd={goEnd}
                 onToggleReading={toggleReading}
               />
             </div>
           ) : sidePanel && !started && !collapsed ? (
             <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
-              <div
-                ref={panelRef}
-                className="flex min-h-0 flex-1 flex-col overflow-hidden border border-white/10 bg-[#07080c]/82"
-              >
-              <IntroPanelBody profile={profile} />
-              <ChapterControls
-                attached
-                playing={playing}
-                started={started}
-                activeIndex={index}
-                chapterCount={chapters.length}
-                onPrev={prev}
-                onNext={next}
-                onTogglePlay={togglePlay}
-                onStart={goStart}
-                onEnd={goEnd}
-              />
-              </div>
+              {panelShell(<IntroPanelBody profile={profile} />)}
             </div>
           ) : null}
 
@@ -524,7 +503,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
             <ChapterAlbum
               photos={chapter.photos}
               chapterTitle={chapter.title}
-              open={albumOpen}
+              open={albumOpen && wide}
               reducedMotion={reducedMotion}
               albumRef={setAlbumEl}
               onToggle={toggleAlbum}
@@ -535,12 +514,18 @@ export function Experience({ chapters, profile }: ExperienceProps) {
 
         <div
           ref={timelineRef}
-          className="pointer-events-auto z-20 shrink-0 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-5"
+          className={`pointer-events-auto z-20 shrink-0 ${
+            short
+              ? "p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]"
+              : "p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-5"
+          }`}
         >
           <Timeline
             chapters={chapters}
             activeIndex={index}
             started={started}
+            playing={playing}
+            compact={short}
             onGoTo={goTo}
             onContact={goContact}
           />
