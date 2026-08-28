@@ -15,7 +15,7 @@ moments:
     body: Moved into the Krispy House with my best friend Antoine. A house, a crew, a label in the living room.
   - title: Krispy Records
     kind: work
-    body: Supporting Krispy Records from inside the house: the music, the people, the nights in 78.
+    body: "Supporting Krispy Records from inside the house: the music, the people, the nights in 78."
 ---
 
 Croissy-sur-Seine, Yvelines. The Krispy House, with Antoine. A house you share with your best friend and a record label.

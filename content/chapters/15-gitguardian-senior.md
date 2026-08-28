@@ -17,7 +17,7 @@ moments:
     kind: work
     period: Jan 2023–Oct 2025
     href: https://www.gitguardian.com
-    body: Product-led programs and CRO across two markets. The field work starts here: OWASP, CNCF, the rooms where developers and AppSec already gather.
+    body: "Product-led programs and CRO across two markets. The field work starts here: OWASP, CNCF, the rooms where developers and AppSec already gather."
 ---
 
 Same company, wider brief. Senior growth marketing manager: USA and EMEA, still from the 9th.

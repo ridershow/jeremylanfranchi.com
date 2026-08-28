@@ -18,7 +18,7 @@ moments:
     kind: work
     period: Nov 2025–Present
     href: https://www.gitguardian.com
-    body: Black Hat, DEF CON, RSA: the events, the territories, the conversations. Showing up where security people already are, and turning that into a motion.
+    body: "Black Hat, DEF CON, RSA: the events, the territories, the conversations. Showing up where security people already are, and turning that into a motion."
 ---
 
 November 2025. Still GitGuardian. Head of global field marketing.
