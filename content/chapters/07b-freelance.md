@@ -16,7 +16,7 @@ moments:
   - title: WordPress & marketing
     kind: work
     period: 2016–2018
-    body: Freelance WordPress development and marketing: sites and campaigns for people who needed them yesterday.
+    body: "Freelance WordPress development and marketing: sites and campaigns for people who needed them yesterday."
 ---
 
 Croissy years. Freelance WordPress development and marketing, from 2016 until 2018, overlapping the Google certificate, the house, then Bali.

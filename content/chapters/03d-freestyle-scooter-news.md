@@ -15,7 +15,7 @@ moments:
   - title: The reference blog
     kind: work
     period: Jun–Dec 2012
-    body: Webmaster for the French and English reference site covering the freestyle scooter world: news, both languages, the scene as it moved.
+    body: "Webmaster for the French and English reference site covering the freestyle scooter world: news, both languages, the scene as it moved."
 ---
 
 June 2012. A paid seat on the web: webmaster at Freestyle Scooter News, the French and English reference blog for the sport.

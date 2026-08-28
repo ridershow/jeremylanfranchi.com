@@ -17,11 +17,11 @@ moments:
     kind: work
     period: Sep 2019–Sep 2021
     href: https://www.beng.agency
-    body: Where Shopify starts: e-commerce, inbound, ads, and outbound for B2C and B2B. The agency I launched after Studapart: 18th first, then the 9th.
+    body: "Where Shopify starts: e-commerce, inbound, ads, and outbound for B2C and B2B. The agency I launched after Studapart: 18th first, then the 9th."
   - title: Adeline Klam
     kind: work
     href: https://adelineklam.com
-    body: Migrated the boutique to Shopify. Online revenue followed: five times what it was.
+    body: "Migrated the boutique to Shopify. Online revenue followed: five times what it was."
   - title: VMware, LG, Dell
     kind: work
     body: Enterprise names on the roster. The B2B side of the same agency.

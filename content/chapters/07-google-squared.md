@@ -30,7 +30,7 @@ moments:
   - title: Think Like A Brand
     kind: study
     period: Module 3
-    body: Integrated campaigns and the customer journey: the right place, the right need, the right time. Search, AdWords, display.
+    body: "Integrated campaigns and the customer journey: the right place, the right need, the right time. Search, AdWords, display."
   - title: Think Optimised
     kind: study
     period: Module 4

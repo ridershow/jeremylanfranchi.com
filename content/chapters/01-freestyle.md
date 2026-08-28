@@ -14,7 +14,7 @@ moments:
   - title: The first tricks
     kind: life
     period: 2007
-    body: Freestyle scootering. Pictures, a magazine, a brand: all of it starts here.
+    body: "Freestyle scootering. Pictures, a magazine, a brand: all of it starts here."
 photos:
   - src: /photos/freestyle/scooter-sequence.jpg
     caption: The sport, in sequence.

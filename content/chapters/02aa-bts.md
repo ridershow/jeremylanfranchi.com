@@ -16,7 +16,7 @@ moments:
   - title: Industrial and mechanical
     kind: study
     period: Puteaux
-    body: Hands on metal and drawings. Invent, design, prototype: the school version of the loop that Renault was running in parallel.
+    body: "Hands on metal and drawings. Invent, design, prototype: the school version of the loop that Renault was running in parallel."
 ---
 
 BTS at SUPII Mécavénie in Puteaux: industrial and mechanical. The apprenticeship at Renault ran alongside it.

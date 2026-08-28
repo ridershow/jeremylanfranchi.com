@@ -17,7 +17,7 @@ moments:
     kind: work
     period: 2012–2016
     href: https://www.urbanartt.com
-    body: Freestyle scooter brand, street culture, parts designed in France. Associate, team manager, photographer: launched from this chapter, sold worldwide.
+    body: "Freestyle scooter brand, street culture, parts designed in France. Associate, team manager, photographer: launched from this chapter, sold worldwide."
 ---
 
 The other thing that leaves the notebook: UrbanArtt. Freestyle scooter brand, street culture, parts designed in France.
