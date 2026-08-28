@@ -14,9 +14,9 @@ export function formatRange(
   const e = new Date(`${end}T00:00:00`);
   if (Number.isNaN(s.getTime())) return "";
   const startText = s.toLocaleDateString("en-US", MONTH_YEAR);
-  if (ongoing) return `${startText} — Present`;
+  if (ongoing) return `${startText} – Present`;
   if (Number.isNaN(e.getTime())) return startText;
-  return `${startText} — ${e.toLocaleDateString("en-US", MONTH_YEAR)}`;
+  return `${startText} – ${e.toLocaleDateString("en-US", MONTH_YEAR)}`;
 }
 
 export function yearOf(iso: string) {

@@ -43,9 +43,15 @@ export type Social = {
   href: string;
 };
 
+export type Craft = {
+  title: string;
+  line: string;
+  chapters: string[];
+};
+
 export type Skills = {
-  core: string[];
-  other: string[];
+  crafts: Craft[];
+  tools?: string[];
 };
 
 export type Profile = {

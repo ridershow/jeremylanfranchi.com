@@ -51,7 +51,7 @@ export function Landing({ profile }: { profile: Profile }) {
                 href="/journey"
                 className="inline-flex items-center gap-2 rounded-full bg-[var(--coral)] px-7 py-3.5 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:brightness-110"
               >
-                Discover my journey
+                See the journey
                 <span aria-hidden="true">→</span>
               </Link>
               <a

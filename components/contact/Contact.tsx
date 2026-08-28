@@ -90,7 +90,7 @@ export function Contact({ profile }: { profile: Profile }) {
               href="/journey"
               className="mt-10 inline-flex items-center gap-2 text-[11px] tracking-[0.16em] text-white/45 uppercase transition hover:text-white"
             >
-              Or get back on my life journey
+              Or keep traveling
               <span aria-hidden="true">→</span>
             </Link>
           </motion.div>

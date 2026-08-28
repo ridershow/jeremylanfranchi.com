@@ -5,6 +5,10 @@
   --void: #07080c;
   --background: #07080c;
   --foreground: #f6f4f0;
+  --surface: #0c0e14;
+  --surface-raised: #14161e;
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --text-muted: rgba(246, 244, 240, 0.62);
   --split-type: 38.2%;
   --measure: 65ch;
   --track-education: 8px;
@@ -89,7 +93,7 @@ body {
 }
 
 .journey-pin[data-visited="true"]::before {
-  background: #f3b4ab;
+  background: #c8c2b8;
 }
 
 .journey-pin[data-active="true"]::before {
@@ -98,6 +102,21 @@ body {
   box-shadow:
     0 0 0 2px rgba(7, 8, 12, 0.35),
     0 0 16px rgba(232, 93, 76, 0.85);
+}
+
+@media (max-width: 767px) {
+  .journey-pin {
+    width: 44px;
+    height: 44px;
+  }
+
+  .journey-pin::before {
+    inset: 16px;
+  }
+
+  .journey-pin[data-active="true"]::before {
+    inset: 14px;
+  }
 }
 
 .journey-pin[data-active="true"]::after {

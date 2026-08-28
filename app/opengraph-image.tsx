@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const dynamic = "force-static";
-export const alt = "Jérémy Lanfranchi — growth marketer and photographer";
+export const alt = "Jérémy Lanfranchi: growth marketer and photographer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -51,7 +51,7 @@ export default function OpenGraphImage() {
               maxWidth: 820,
             }}
           >
-            Growth marketer, photographer, traveler. Join me on my journey.
+            Growth marketer, photographer, traveler.
           </div>
         </div>
         <div
