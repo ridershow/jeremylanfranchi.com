@@ -14,8 +14,9 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { ChapterAlbum } from "@/components/chapter/ChapterAlbum";
 import { ChapterControls } from "@/components/chapter/ChapterControls";
-import { ChapterPanel, ReadToggle } from "@/components/chapter/ChapterPanel";
+import { ChapterPanel } from "@/components/chapter/ChapterPanel";
 import { PhotoLightbox } from "@/components/chapter/PhotoLightbox";
+import { PhoneJourney } from "@/components/journey/PhoneJourney";
 import { Wordmark } from "@/components/chrome/Wordmark";
 import { Timeline } from "@/components/timeline/Timeline";
 import { useJourney } from "@/hooks/useJourney";
@@ -40,38 +41,18 @@ type ExperienceProps = {
   profile: Profile;
 };
 
-function IntroPanelBody({
-  profile,
-  reading = false,
-  onToggleReading,
-}: {
-  profile: Profile;
-  reading?: boolean;
-  onToggleReading?: () => void;
-}) {
+function IntroPanelBody({ profile }: { profile: Profile }) {
   const [motto, ...rest] = profile.intro;
-  const teaser = !reading;
 
   return (
-    <div
-      className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 text-base leading-[1.65] text-white/82 md:flex-1 md:px-5 md:py-5 ${
-        reading ? "flex-1" : ""
-      } ${
-        teaser
-          ? "max-md:[&_.intro-rest>p:not(:first-child)]:hidden max-md:[&_.intro-rest>p:first-child]:line-clamp-3 max-md:[&_.intro-more]:hidden"
-          : "flex-1"
-      }`}
-    >
-      {reading ? <ReadToggle expanded onClick={onToggleReading} /> : null}
+    <div className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 text-base leading-[1.65] text-white/82 md:px-5 md:py-5">
       {motto ? <p>{motto}</p> : null}
-      <div className="intro-rest">
-        {rest.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)} className="mt-4">
-            {paragraph}
-          </p>
-        ))}
-      </div>
-      <div className="intro-more mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+      {rest.map((paragraph) => (
+        <p key={paragraph.slice(0, 24)} className="mt-4">
+          {paragraph}
+        </p>
+      ))}
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
         <Link
           href="/skills"
           className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
@@ -80,13 +61,6 @@ function IntroPanelBody({
           <span aria-hidden="true">→</span>
         </Link>
       </div>
-      {teaser ? (
-        <ReadToggle
-          expanded={false}
-          onClick={onToggleReading}
-          className="md:hidden"
-        />
-      ) : null}
     </div>
   );
 }
@@ -107,8 +81,10 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     goTo,
     next,
     prev,
+    reset,
     reducedMotion,
   } = useJourney(chapters.length, goContact, lightboxIndex !== null);
+  const stopPlay = useCallback(() => setPlaying(false), [setPlaying]);
   const appliedChapterQuery = useRef(false);
 
   useEffect(() => {
@@ -131,14 +107,12 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const overheadRef = useRef<HTMLDivElement>(null);
   const [albumEl, setAlbumEl] = useState<HTMLDivElement | null>(null);
   const [mapPadding, setMapPadding] = useState<MapPadding | null>(null);
-  const [reading, setReading] = useState(false);
 
   const chapter = chapters[index];
   const collapsed = playing;
-  const textFirst = phone && reading && !playing;
   const hasPhotos = Boolean(started && chapter && chapter.photos.length > 0);
-  const albumChrome = hasPhotos && !collapsed && !textFirst && !short;
-  const albumVisible = albumChrome && albumOpen && (phone || wide);
+  const albumChrome = !phone && hasPhotos && !collapsed && !short;
+  const albumVisible = albumChrome && albumOpen && wide;
   const photoCount = chapter?.photos.length ?? 0;
   const measuredLayout = useContentLayout({
     enabled: !phone && !collapsed,
@@ -182,33 +156,13 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     });
   }, [photoCount]);
 
-  const toggleReading = useCallback(() => {
-    setReading((open) => {
-      if (!open) setPlaying(false);
-      return !open;
-    });
-  }, [setPlaying]);
-
-  useEffect(() => {
-    if (playing || !phone) setReading(false);
-  }, [playing, phone]);
-
-  useEffect(() => {
-    if (!reading) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setReading(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [reading]);
-
   useEffect(() => {
     panelRef.current?.scrollTo({ top: 0 });
-  }, [index, reading]);
+  }, [index]);
 
   useEffect(() => {
     const frame = frameRef.current;
-    if (!frame || (phone && textFirst)) {
+    if (!frame) {
       setMapPadding(null);
       return;
     }
@@ -216,24 +170,16 @@ export function Experience({ chapters, profile }: ExperienceProps) {
     const measure = () => {
       const album = albumEl;
       if (phone) {
+        // The globe frames chapters inside PhoneJourney's map band.
         const well = wellRef.current;
-        if (!well) {
-          setMapPadding(null);
-          return;
-        }
-        const frameRect = frame.getBoundingClientRect();
-        const padding = paddingFromRects(
-          frameRect,
-          well.getBoundingClientRect(),
+        setMapPadding(
+          well
+            ? paddingFromRects(
+                frame.getBoundingClientRect(),
+                well.getBoundingClientRect(),
+              )
+            : null,
         );
-        if (albumVisible && album) {
-          const albumRect = album.getBoundingClientRect();
-          padding.bottom = Math.max(
-            padding.bottom,
-            Math.round(frameRect.bottom - albumRect.top),
-          );
-        }
-        setMapPadding(padding);
         return;
       }
 
@@ -264,7 +210,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [phone, collapsed, started, albumVisible, albumEl, index, textFirst]);
+  }, [phone, collapsed, started, albumVisible, albumEl, index]);
 
   if (!chapter) return null;
 
@@ -284,9 +230,7 @@ export function Experience({ chapters, profile }: ExperienceProps) {
   const panelShell = (body: ReactNode) => (
     <div
       ref={panelRef}
-      className={`pointer-events-auto mt-6 flex min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 md:mt-8 ${
-        textFirst ? "flex-1" : "md:flex-1"
-      }`}
+      className="pointer-events-auto mt-6 flex min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 md:mt-8 md:flex-1"
     >
       {body}
       <ChapterControls
@@ -319,218 +263,193 @@ export function Experience({ chapters, profile }: ExperienceProps) {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(180deg,rgba(7,8,12,0.42)_0%,transparent_22%)] md:block" />
-      <div
-        className={`pointer-events-none absolute inset-0 md:hidden ${
-          textFirst
-            ? "bg-[linear-gradient(180deg,rgba(7,8,12,0.28)_0%,rgba(7,8,12,0.12)_20%,rgba(7,8,12,0.45)_100%)]"
-            : collapsed
-              ? "bg-[linear-gradient(180deg,rgba(7,8,12,0.32)_0%,transparent_20%,transparent_58%,rgba(7,8,12,0.55)_100%)]"
-              : "bg-[linear-gradient(180deg,rgba(7,8,12,0.38)_0%,transparent_18%,transparent_42%,rgba(7,8,12,0.45)_72%,rgba(7,8,12,0.82)_100%)]"
-        }`}
-      />
+      {phone ? (
+        <PhoneJourney
+          chapters={chapters}
+          profile={profile}
+          index={index}
+          started={started}
+          playing={playing}
+          reducedMotion={reducedMotion}
+          wellRef={wellRef}
+          onGoTo={goTo}
+          onReset={reset}
+          onTogglePlay={togglePlay}
+          onStopPlay={stopPlay}
+        />
+      ) : (
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(7,8,12,0.42)_0%,transparent_22%)]" />
 
-      <div className="pointer-events-none relative z-10 flex h-full flex-col">
-        <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-2 md:p-6 lg:px-10">
-          <Wordmark profile={profile} />
-        </div>
-
-        <div
-          ref={wellRef}
-          className={
-            textFirst
-              ? "h-0 shrink-0 overflow-hidden md:hidden"
-              : short
-                ? "relative min-h-0 flex-1 overflow-hidden md:hidden"
-                : "relative min-h-[42dvh] flex-1 overflow-hidden md:hidden"
-          }
-        >
-          {phone && albumChrome && chapter ? (
-            <ChapterAlbum
-              photos={chapter.photos}
-              chapterTitle={chapter.title}
-              open={albumOpen}
-              phone
-              reducedMotion={reducedMotion}
-              albumRef={setAlbumEl}
-              onToggle={toggleAlbum}
-              onSelect={setLightboxIndex}
-            />
-          ) : null}
-        </div>
-
-        <div
-          ref={contentRef}
-          className={`relative flex min-h-0 overflow-hidden px-4 md:px-8 lg:px-10 ${
-            textFirst
-              ? "min-h-0 flex-1 flex-col"
-              : collapsed
-                ? "shrink-0 max-md:max-h-[46%] flex-col md:min-h-0 md:flex-1"
-                : sidePanel
-                  ? "shrink-0 flex-col md:min-h-0 md:flex-1 md:flex-row md:items-start md:justify-between md:gap-8"
-                  : "shrink-0 flex-col md:min-h-0 md:flex-1"
-          }`}
-        >
-          <div
-            className={`relative z-20 flex min-h-0 flex-col ${
-              sidePanel
-                ? "md:max-w-[min(36rem,calc(38.2vw-3.5rem))] md:shrink-0"
-                : "min-h-0 w-full flex-1 overflow-hidden md:max-w-[min(36rem,calc(38.2vw-3.5rem))]"
-            }`}
-          >
-            <div ref={overheadRef} className="shrink-0">
-              {!playing ? (
-                <motion.p
-                  key={started ? `${chapter.slug}-kicker` : "orbit-kicker"}
-                  initial={reducedMotion ? false : { y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  className="text-xs tracking-[0.22em] text-[var(--text-muted)] uppercase"
-                >
-                  {started
-                    ? chapter.kicker || chapter.location.name
-                    : profile.kicker}
-                </motion.p>
-              ) : null}
-
-              {relocating ? (
-                <p className="mt-2 text-xs tracking-[0.2em] text-[var(--coral)] uppercase md:mt-5">
-                  Now flying · {chapter.location.name}
-                </p>
-              ) : playing ? (
-                <p className="mt-2 text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase md:mt-5">
-                  {sameCompanyMove
-                    ? "Same pin · new title"
-                    : chapter.company
-                      ? "Same pin · new brief"
-                      : "Same pin"}
-                  {chapter.company ? ` · ${chapter.company}` : ""}
-                </p>
-              ) : null}
+          <div className="pointer-events-none relative z-10 flex h-full flex-col">
+            <div className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-2 md:p-6 lg:px-10">
+              <Wordmark profile={profile} />
             </div>
 
-            <motion.h1
-              ref={titleRef}
-              key={started ? chapter.slug : "orbit-title"}
-              initial={reducedMotion ? false : { y: 18, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={
-                reducedMotion
-                  ? { duration: 0.2 }
-                  : { type: "spring", stiffness: 260, damping: 24 }
-              }
-              className={
-                started
-                  ? `font-display mt-1 shrink-0 leading-[0.9] font-semibold tracking-tight text-balance md:mt-3 ${
-                      compactTitle
-                        ? "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(1.8rem,4vw,3.25rem)]"
-                        : "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(2.4rem,5.4vw,4.75rem)]"
-                    } ${chapter.company ? "max-w-[16ch]" : "max-w-[12ch]"}`
-                  : "sr-only"
-              }
+            <div
+              ref={contentRef}
+              className={`relative flex min-h-0 flex-1 flex-col overflow-hidden px-4 md:px-8 lg:px-10 ${
+                sidePanel
+                  ? "md:flex-row md:items-start md:justify-between md:gap-8"
+                  : ""
+              }`}
             >
-              {started ? chapter.title : "Journey"}
-            </motion.h1>
+              <div
+                className={`relative z-20 flex min-h-0 flex-col ${
+                  sidePanel
+                    ? "md:max-w-[min(36rem,calc(38.2vw-3.5rem))] md:shrink-0"
+                    : "min-h-0 w-full flex-1 overflow-hidden md:max-w-[min(36rem,calc(38.2vw-3.5rem))]"
+                }`}
+              >
+                <div ref={overheadRef} className="shrink-0">
+                  {!playing ? (
+                    <motion.p
+                      key={started ? `${chapter.slug}-kicker` : "orbit-kicker"}
+                      initial={reducedMotion ? false : { y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      className="text-xs tracking-[0.22em] text-[var(--text-muted)] uppercase"
+                    >
+                      {started
+                        ? chapter.kicker || chapter.location.name
+                        : profile.kicker}
+                    </motion.p>
+                  ) : null}
 
-            {started && !sidePanel ? (
-              <ChapterPanel
-                chapters={chapters}
-                chapter={chapter}
-                activeIndex={index}
-                reducedMotion={reducedMotion}
-                collapsed={collapsed}
-                playing={playing}
-                reading={reading}
-                layoutMode={layoutMode}
-                panelRef={panelRef}
-                onGoTo={goTo}
-                onPrev={prev}
-                onNext={next}
-                onTogglePlay={togglePlay}
-                onToggleReading={toggleReading}
-              />
-            ) : !started ? (
-              collapsed ? (
-                <div className="pointer-events-auto mt-6 overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90">
-                  <ChapterControls
-                    attached={false}
-                    playing={playing}
-                    started={started}
+                  {relocating ? (
+                    <p className="mt-2 text-xs tracking-[0.2em] text-[var(--coral)] uppercase md:mt-5">
+                      Now flying · {chapter.location.name}
+                    </p>
+                  ) : playing ? (
+                    <p className="mt-2 text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase md:mt-5">
+                      {sameCompanyMove
+                        ? "Same pin · new title"
+                        : chapter.company
+                          ? "Same pin · new brief"
+                          : "Same pin"}
+                      {chapter.company ? ` · ${chapter.company}` : ""}
+                    </p>
+                  ) : null}
+                </div>
+
+                <motion.h1
+                  ref={titleRef}
+                  key={started ? chapter.slug : "orbit-title"}
+                  initial={reducedMotion ? false : { y: 18, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={
+                    reducedMotion
+                      ? { duration: 0.2 }
+                      : { type: "spring", stiffness: 260, damping: 24 }
+                  }
+                  className={
+                    started
+                      ? `font-display mt-1 shrink-0 leading-[0.9] font-semibold tracking-tight text-balance md:mt-3 ${
+                          compactTitle
+                            ? "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(1.8rem,4vw,3.25rem)]"
+                            : "text-[clamp(1.7rem,7.2vw,2.35rem)] md:text-[clamp(2.4rem,5.4vw,4.75rem)]"
+                        } ${chapter.company ? "max-w-[16ch]" : "max-w-[12ch]"}`
+                      : "sr-only"
+                  }
+                >
+                  {started ? chapter.title : "Journey"}
+                </motion.h1>
+
+                {started && !sidePanel ? (
+                  <ChapterPanel
+                    chapters={chapters}
+                    chapter={chapter}
                     activeIndex={index}
-                    chapterCount={chapters.length}
+                    reducedMotion={reducedMotion}
+                    collapsed={collapsed}
+                    playing={playing}
+                    layoutMode={layoutMode}
+                    panelRef={panelRef}
+                    onGoTo={goTo}
+                    onPrev={prev}
+                    onNext={next}
+                    onTogglePlay={togglePlay}
+                  />
+                ) : !started ? (
+                  collapsed ? (
+                    <div className="pointer-events-auto mt-6 overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90">
+                      <ChapterControls
+                        attached={false}
+                        playing={playing}
+                        started={started}
+                        activeIndex={index}
+                        chapterCount={chapters.length}
+                        onPrev={prev}
+                        onNext={next}
+                        onTogglePlay={togglePlay}
+                      />
+                    </div>
+                  ) : !sidePanel ? (
+                    panelShell(
+                      <IntroPanelBody
+                        profile={profile}
+                      />,
+                    )
+                  ) : null
+                ) : null}
+              </div>
+
+              {sidePanel && started ? (
+                <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
+                  <ChapterPanel
+                    chapters={chapters}
+                    chapter={chapter}
+                    activeIndex={index}
+                    reducedMotion={reducedMotion}
+                    collapsed={collapsed}
+                    playing={playing}
+                    layoutMode={layoutMode}
+                    panelRef={panelRef}
+                    onGoTo={goTo}
                     onPrev={prev}
                     onNext={next}
                     onTogglePlay={togglePlay}
                   />
                 </div>
-              ) : !sidePanel ? (
-                panelShell(
-                  <IntroPanelBody
-                    profile={profile}
-                    reading={reading}
-                    onToggleReading={toggleReading}
-                  />,
-                )
-              ) : null
-            ) : null}
-          </div>
+              ) : sidePanel && !started && !collapsed ? (
+                <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
+                  {panelShell(<IntroPanelBody profile={profile} />)}
+                </div>
+              ) : null}
 
-          {sidePanel && started ? (
-            <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
-              <ChapterPanel
+              {albumChrome ? (
+                <ChapterAlbum
+                  photos={chapter.photos}
+                  chapterTitle={chapter.title}
+                  open={albumOpen && wide}
+                  reducedMotion={reducedMotion}
+                  albumRef={setAlbumEl}
+                  onToggle={toggleAlbum}
+                  onSelect={setLightboxIndex}
+                />
+              ) : null}
+            </div>
+
+            <div
+              ref={timelineRef}
+              className={`pointer-events-auto z-20 shrink-0 ${
+                short
+                  ? "p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]"
+                  : "p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-5"
+              }`}
+            >
+              <Timeline
                 chapters={chapters}
-                chapter={chapter}
                 activeIndex={index}
-                reducedMotion={reducedMotion}
-                collapsed={collapsed}
+                started={started}
                 playing={playing}
-                reading={reading}
-                layoutMode={layoutMode}
-                panelRef={panelRef}
+                compact={short}
                 onGoTo={goTo}
-                onPrev={prev}
-                onNext={next}
-                onTogglePlay={togglePlay}
-                onToggleReading={toggleReading}
+                onContact={goContact}
               />
             </div>
-          ) : sidePanel && !started && !collapsed ? (
-            <div className="pointer-events-auto relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden md:max-w-[min(26rem,36vw)]">
-              {panelShell(<IntroPanelBody profile={profile} />)}
-            </div>
-          ) : null}
-
-          {!phone && albumChrome ? (
-            <ChapterAlbum
-              photos={chapter.photos}
-              chapterTitle={chapter.title}
-              open={albumOpen && wide}
-              reducedMotion={reducedMotion}
-              albumRef={setAlbumEl}
-              onToggle={toggleAlbum}
-              onSelect={setLightboxIndex}
-            />
-          ) : null}
-        </div>
-
-        <div
-          ref={timelineRef}
-          className={`pointer-events-auto z-20 shrink-0 ${
-            short
-              ? "p-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]"
-              : "p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-5"
-          }`}
-        >
-          <Timeline
-            chapters={chapters}
-            activeIndex={index}
-            started={started}
-            playing={playing}
-            compact={short}
-            onGoTo={goTo}
-            onContact={goContact}
-          />
-        </div>
-      </div>
+          </div>
+        </>
+      )}
 
       {lightboxIndex !== null &&
       lightboxChapter === index &&

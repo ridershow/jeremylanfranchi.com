@@ -8,7 +8,6 @@ type ChapterAlbumProps = {
   photos: Photo[];
   chapterTitle: string;
   open: boolean;
-  phone?: boolean;
   reducedMotion: boolean;
   albumRef?: Ref<HTMLDivElement | null>;
   onToggle: () => void;
@@ -19,7 +18,6 @@ export function ChapterAlbum({
   photos,
   chapterTitle,
   open,
-  phone = false,
   reducedMotion,
   albumRef,
   onToggle,
@@ -31,60 +29,6 @@ export function ChapterAlbum({
   const enter = reducedMotion
     ? { duration: 0.12 }
     : { type: "spring" as const, stiffness: 280, damping: 30 };
-
-  if (phone) {
-    return (
-      <AnimatePresence mode="wait" initial={false}>
-        {open ? (
-          <motion.div
-            key="filmstrip"
-            ref={albumRef}
-            initial={reducedMotion ? false : { y: 16, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={reducedMotion ? { opacity: 0 } : { y: 10, opacity: 0 }}
-            transition={enter}
-            className="pointer-events-auto absolute inset-x-2 bottom-2 max-h-full overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90"
-            aria-label={`Album, ${count} photos`}
-          >
-            <AlbumHeader count={count} onHide={onToggle} compact />
-            <div className="flex gap-2 overflow-x-auto overscroll-contain px-2 pb-2">
-              {photos.map((photo, index) => (
-                <button
-                  key={photo.src}
-                  type="button"
-                  onClick={() => onSelect(index)}
-                  className="relative h-16 w-24 shrink-0 overflow-hidden"
-                  aria-label={photo.caption || `${chapterTitle} photo ${index + 1}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={photo.src}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        ) : (
-          <motion.button
-            key="reopen"
-            type="button"
-            initial={reducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
-            onClick={onToggle}
-            className="pointer-events-auto absolute right-2 bottom-2 border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 px-3 py-2 text-xs tracking-[0.18em] text-white/70 uppercase transition hover:text-[var(--coral)]"
-            aria-expanded={false}
-            aria-label={`Show album, ${count} photos`}
-          >
-            Photos · {count}
-          </motion.button>
-        )}
-      </AnimatePresence>
-    );
-  }
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -158,18 +102,12 @@ export function ChapterAlbum({
 function AlbumHeader({
   count,
   onHide,
-  compact = false,
 }: {
   count: number;
   onHide: () => void;
-  compact?: boolean;
 }) {
   return (
-    <div
-      className={`flex shrink-0 items-center justify-between gap-3 ${
-        compact ? "px-2 py-1.5" : "px-3 py-2.5"
-      }`}
-    >
+    <div className="flex shrink-0 items-center justify-between gap-3 px-3 py-2.5">
       <p className="text-xs tracking-[0.18em] text-[var(--text-muted)] uppercase">
         Album · {count}
       </p>

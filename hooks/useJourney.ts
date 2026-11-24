@@ -64,6 +64,12 @@ export function useJourney(
     setIndex(0);
   }, []);
 
+  const reset = useCallback(() => {
+    setPlaying(false);
+    setStarted(false);
+    setIndex(0);
+  }, []);
+
   const goEnd = useCallback(() => {
     setPlaying(false);
     beyondEnd.current?.();
@@ -156,6 +162,7 @@ export function useJourney(
     prev,
     goStart,
     goEnd,
+    reset,
     reducedMotion,
   };
 }
