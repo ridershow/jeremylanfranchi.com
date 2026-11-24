@@ -42,7 +42,7 @@ export function ChapterControls({
           disabled={!started || activeIndex === 0}
           aria-label="Previous chapter"
           title="Previous chapter (A or left arrow)"
-          className={`${btn} max-md:hidden`}
+          className={btn}
         >
           <SkipIcon flipped />
         </button>

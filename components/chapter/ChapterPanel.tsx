@@ -17,14 +17,12 @@ type ChapterPanelProps = {
   reducedMotion: boolean;
   collapsed: boolean;
   playing: boolean;
-  reading?: boolean;
   layoutMode?: ContentLayoutMode;
   panelRef?: RefObject<HTMLDivElement | null>;
   onGoTo: (index: number) => void;
   onPrev: () => void;
   onNext: () => void;
   onTogglePlay: () => void;
-  onToggleReading?: () => void;
 };
 
 export function ChapterPanel({
@@ -34,14 +32,12 @@ export function ChapterPanel({
   reducedMotion,
   collapsed,
   playing,
-  reading = false,
   layoutMode = "default",
   panelRef,
   onGoTo,
   onPrev,
   onNext,
   onTogglePlay,
-  onToggleReading,
 }: ChapterPanelProps) {
   const paragraphs = chapter.body.split(/\n\n+/).filter(Boolean);
   const range = formatRange(
@@ -53,70 +49,58 @@ export function ChapterPanel({
   const meta = [range, chapter.location.name].filter(Boolean);
   const tenure = tenureFor(chapters, activeIndex);
   const side = layoutMode === "side";
-  const teaser = !reading;
 
   const story = (
     <>
       {tenure ? (
-        <div className="story-extra">
-          <TenureTrack
-            tenure={tenure}
-            activeIndex={activeIndex}
-            onGoTo={onGoTo}
-          />
-        </div>
+        <TenureTrack
+          tenure={tenure}
+          activeIndex={activeIndex}
+          onGoTo={onGoTo}
+        />
       ) : null}
 
-      <div className="story-body max-w-[65ch] space-y-4 text-base leading-[1.65] text-white/82">
+      <div className="max-w-[65ch] space-y-4 text-base leading-[1.65] text-white/82">
         {paragraphs.map((paragraph) => (
           <p key={paragraph.slice(0, 24)}>{paragraph}</p>
         ))}
       </div>
 
-      <div className="story-extra">
-        <ChapterMoments
-          moments={chapter.moments}
-          reducedMotion={reducedMotion}
-        />
+      <ChapterMoments moments={chapter.moments} reducedMotion={reducedMotion} />
 
-        {activeIndex === chapters.length - 1 ? (
-          <div className="mt-7 border-t border-[var(--border-subtle)] pt-5">
-            <p className="text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase">
-              End of the road
-            </p>
-            <p className="mt-2 text-base leading-[1.65] text-white/78">
-              That&apos;s the story so far. If you want to work together,
-              talk pictures, or just say hi.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
-            >
-              Say hello
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        ) : null}
-      </div>
+      {activeIndex === chapters.length - 1 ? (
+        <div className="mt-7 border-t border-[var(--border-subtle)] pt-5">
+          <p className="text-xs tracking-[0.2em] text-[var(--text-muted)] uppercase">
+            End of the road
+          </p>
+          <p className="mt-2 text-base leading-[1.65] text-white/78">
+            That&apos;s the story so far. If you want to work together, talk
+            pictures, or just say hi.
+          </p>
+          <Link
+            href="/contact"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)]"
+          >
+            Say hello
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      ) : null}
     </>
   );
 
   return (
     <div
       className={`pointer-events-auto flex min-h-0 flex-col ${
-        side
-          ? "flex-1"
-          : reading
-            ? "mt-6 flex-1 md:mt-8"
-            : "mt-6 md:mt-8 md:flex-1"
+        side ? "flex-1" : "mt-6 md:mt-8 md:flex-1"
       }`}
     >
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {!collapsed ? (
           <p
             className={`shrink-0 text-[13px] text-[var(--text-muted)] ${
-              reading ? "line-clamp-2" : ""
-            } ${side ? "md:text-right" : ""}`}
+              side ? "md:text-right" : ""
+            }`}
           >
             {meta.join(" · ")}
           </p>
@@ -124,32 +108,14 @@ export function ChapterPanel({
 
         <div
           ref={panelRef}
-          className={`mt-4 flex min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 ${
-            reading ? "flex-1" : "md:flex-1"
-          }`}
+          className="mt-4 flex min-h-0 flex-col overflow-hidden border border-[var(--border-subtle)] bg-[var(--surface-raised)]/90 md:flex-1"
         >
           {!collapsed ? (
             <div
               key={chapter.slug}
-              className={`chapter-panel min-h-0 overflow-y-auto overscroll-contain px-4 py-4 md:flex-1 md:px-5 md:py-5 ${
-                reading ? "flex-1" : ""
-              } ${
-                teaser
-                  ? "max-md:[&_.story-extra]:hidden max-md:[&_.story-body>p:not(:first-child)]:hidden max-md:[&_.story-body>p:first-child]:line-clamp-3"
-                  : "flex-1"
-              }`}
+              className="chapter-panel min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:px-5 md:py-5"
             >
-              {reading ? (
-                <ReadToggle expanded onClick={onToggleReading} />
-              ) : null}
               {story}
-              {teaser ? (
-                <ReadToggle
-                  expanded={false}
-                  onClick={onToggleReading}
-                  className="md:hidden"
-                />
-              ) : null}
             </div>
           ) : null}
           <ChapterControls
@@ -165,32 +131,6 @@ export function ChapterPanel({
         </div>
       </div>
     </div>
-  );
-}
-
-export function ReadToggle({
-  expanded,
-  onClick,
-  className = "",
-}: {
-  expanded: boolean;
-  onClick?: () => void;
-  className?: string;
-}) {
-  if (!onClick) return null;
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-expanded={expanded}
-      className={`inline-flex items-center gap-2 text-sm font-medium tracking-[0.14em] text-white uppercase transition hover:text-[var(--coral)] ${
-        expanded ? "mb-4" : "mt-3"
-      } ${className}`}
-    >
-      {expanded ? "Close" : "Read more"}
-      <span aria-hidden="true">{expanded ? "×" : "→"}</span>
-    </button>
   );
 }
 
@@ -231,7 +171,7 @@ function CompanyName({
   );
 }
 
-function TenureTrack({ tenure, activeIndex, onGoTo }: TenureTrackProps) {
+export function TenureTrack({ tenure, activeIndex, onGoTo }: TenureTrackProps) {
   const current = tenure.roles.findIndex((role) => role.index === activeIndex);
   const step = current >= 0 ? current + 1 : 1;
   const ladder = tenure.roles.length > 1;
@@ -389,7 +329,7 @@ type ChapterMomentsProps = {
   reducedMotion: boolean;
 };
 
-function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
+export function ChapterMoments({ moments, reducedMotion }: ChapterMomentsProps) {
   if (moments.length === 0) return null;
 
   return (
